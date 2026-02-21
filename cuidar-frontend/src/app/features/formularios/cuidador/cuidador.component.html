@@ -1,0 +1,108 @@
+<div class="formulario-container">
+  <div class="formulario-card">
+    <div class="formulario-header">
+      <h1>Registro de Cuidador</h1>
+      <p>Completa el formulario para unirte a CuidAR como cuidador profesional</p>
+    </div>
+
+    <div class="mensaje-exito" *ngIf="mensaje">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      {{ mensaje }}
+    </div>
+
+    <div class="mensaje-error" *ngIf="error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      {{ error }}
+    </div>
+
+    <form [formGroup]="cuidadorForm" (ngSubmit)="onSubmit()" class="formulario">
+      <div class="form-group">
+        <label for="nombre">Nombre completo *</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          formControlName="nombre" 
+          placeholder="Ej: María González"
+          [class.error]="cuidadorForm.get('nombre')?.invalid && cuidadorForm.get('nombre')?.touched">
+        <span class="error-text" *ngIf="cuidadorForm.get('nombre')?.invalid && cuidadorForm.get('nombre')?.touched">
+          Nombre debe tener al menos 3 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="ejemplo@email.com"
+          [class.error]="cuidadorForm.get('email')?.invalid && cuidadorForm.get('email')?.touched">
+        <span class="error-text" *ngIf="cuidadorForm.get('email')?.invalid && cuidadorForm.get('email')?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefono">Teléfono *</label>
+        <input 
+          type="tel" 
+          id="telefono" 
+          formControlName="telefono" 
+          placeholder="1234567890"
+          [class.error]="cuidadorForm.get('telefono')?.invalid && cuidadorForm.get('telefono')?.touched">
+        <span class="error-text" *ngIf="cuidadorForm.get('telefono')?.invalid && cuidadorForm.get('telefono')?.touched">
+          Teléfono debe tener 10 dígitos
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="experiencia">Experiencia *</label>
+        <textarea 
+          id="experiencia" 
+          formControlName="experiencia" 
+          rows="4"
+          placeholder="Describe tu experiencia como cuidador (mínimo 10 caracteres)"
+          [class.error]="cuidadorForm.get('experiencia')?.invalid && cuidadorForm.get('experiencia')?.touched">
+        </textarea>
+        <span class="error-text" *ngIf="cuidadorForm.get('experiencia')?.invalid && cuidadorForm.get('experiencia')?.touched">
+          La experiencia debe tener al menos 10 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="zonaCobertura">Zona de cobertura *</label>
+        <input 
+          type="text" 
+          id="zonaCobertura" 
+          formControlName="zonaCobertura" 
+          placeholder="Ej: Zona Norte, CABA"
+          [class.error]="cuidadorForm.get('zonaCobertura')?.invalid && cuidadorForm.get('zonaCobertura')?.touched">
+        <span class="error-text" *ngIf="cuidadorForm.get('zonaCobertura')?.invalid && cuidadorForm.get('zonaCobertura')?.touched">
+          Zona de cobertura es requerida
+        </span>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label>
+          <input 
+            type="checkbox" 
+            formControlName="vehiculo">
+          <span>Tengo vehículo propio</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="volver()">Volver</button>
+        <button type="submit" class="btn-primary" [disabled]="cuidadorForm.invalid || enviando">
+          {{ enviando ? 'Enviando...' : 'Enviar Registro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

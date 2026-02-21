@@ -1,0 +1,89 @@
+<div class="solicitud-container">
+  <div class="solicitud-card">
+    <h1>Nueva Solicitud de Cuidado</h1>
+    
+    <form [formGroup]="cuidadoForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nombreFamiliar">Nombre del Familiar</label>
+        <input 
+          type="text" 
+          id="nombreFamiliar" 
+          formControlName="nombreFamiliar" 
+          class="form-control"
+          [class.is-invalid]="cuidadoForm.get('nombreFamiliar')?.invalid && cuidadoForm.get('nombreFamiliar')?.touched">
+        <div class="error-message" *ngIf="cuidadoForm.get('nombreFamiliar')?.invalid && cuidadoForm.get('nombreFamiliar')?.touched">
+          <span *ngIf="cuidadoForm.get('nombreFamiliar')?.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="cuidadoForm.get('nombreFamiliar')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción del Cuidado Necesario</label>
+        <textarea 
+          id="descripcion" 
+          formControlName="descripcion" 
+          class="form-control"
+          rows="4"
+          [class.is-invalid]="cuidadoForm.get('descripcion')?.invalid && cuidadoForm.get('descripcion')?.touched"></textarea>
+        <div class="error-message" *ngIf="cuidadoForm.get('descripcion')?.invalid && cuidadoForm.get('descripcion')?.touched">
+          <span *ngIf="cuidadoForm.get('descripcion')?.errors?.['required']">La descripción es requerida</span>
+          <span *ngIf="cuidadoForm.get('descripcion')?.errors?.['minlength']">Mínimo 10 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="domicilio">Domicilio</label>
+        <input 
+          type="text" 
+          id="domicilio" 
+          formControlName="domicilio" 
+          class="form-control"
+          [class.is-invalid]="cuidadoForm.get('domicilio')?.invalid && cuidadoForm.get('domicilio')?.touched">
+        <div class="error-message" *ngIf="cuidadoForm.get('domicilio')?.invalid && cuidadoForm.get('domicilio')?.touched">
+          <span *ngIf="cuidadoForm.get('domicilio')?.errors?.['required']">El domicilio es requerido</span>
+          <span *ngIf="cuidadoForm.get('domicilio')?.errors?.['minlength']">Mínimo 5 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaInicio">Fecha de Inicio</label>
+          <input 
+            type="datetime-local" 
+            id="fechaInicio" 
+            formControlName="fechaInicio" 
+            class="form-control"
+            [class.is-invalid]="cuidadoForm.get('fechaInicio')?.invalid && cuidadoForm.get('fechaInicio')?.touched">
+          <div class="error-message" *ngIf="cuidadoForm.get('fechaInicio')?.invalid && cuidadoForm.get('fechaInicio')?.touched">
+            La fecha de inicio es requerida
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fechaFin">Fecha de Fin</label>
+          <input 
+            type="datetime-local" 
+            id="fechaFin" 
+            formControlName="fechaFin" 
+            class="form-control"
+            [class.is-invalid]="cuidadoForm.get('fechaFin')?.invalid && cuidadoForm.get('fechaFin')?.touched">
+          <div class="error-message" *ngIf="cuidadoForm.get('fechaFin')?.invalid && cuidadoForm.get('fechaFin')?.touched">
+            La fecha de fin es requerida
+          </div>
+        </div>
+      </div>
+
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="cuidadoForm.invalid || loading">
+        {{ loading ? 'Creando...' : 'Crear Solicitud' }}
+      </button>
+    </form>
+  </div>
+</div>

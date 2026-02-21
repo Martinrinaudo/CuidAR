@@ -1,0 +1,199 @@
+<div class="panel-container">
+  <div class="panel-header">
+    <div class="header-content">
+      <h1>Panel de Administración</h1>
+      <button class="btn-logout" (click)="cerrarSesion()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button 
+      class="tab" 
+      [class.active]="tabActiva === 'cuidadores'"
+      (click)="cambiarTab('cuidadores')">
+      Cuidadores ({{ cuidadores.length }})
+    </button>
+    <button 
+      class="tab" 
+      [class.active]="tabActiva === 'transportistas'"
+      (click)="cambiarTab('transportistas')">
+      Transportistas ({{ transportistas.length }})
+    </button>
+    <button 
+      class="tab" 
+      [class.active]="tabActiva === 'solicitudesCuidado'"
+      (click)="cambiarTab('solicitudesCuidado')">
+      Solicitudes Cuidado ({{ solicitudesCuidado.length }})
+    </button>
+    <button 
+      class="tab" 
+      [class.active]="tabActiva === 'solicitudesTraslado'"
+      (click)="cambiarTab('solicitudesTraslado')">
+      Solicitudes Traslado ({{ solicitudesTraslado.length }})
+    </button>
+  </div>
+
+  <div class="panel-content">
+    <div *ngIf="cargando" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando datos...</p>
+    </div>
+
+    <!-- Tab Cuidadores -->
+    <div *ngIf="!cargando && tabActiva === 'cuidadores'" class="tab-content">
+      <h2>Registros de Cuidadores</h2>
+      <div class="table-container" *ngIf="cuidadores.length > 0; else sinDatos">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Experiencia</th>
+              <th>Zona</th>
+              <th>Vehículo</th>
+              <th>Fecha Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cuidador of cuidadores">
+              <td>{{ cuidador.id }}</td>
+              <td>{{ cuidador.nombre }}</td>
+              <td>{{ cuidador.email }}</td>
+              <td>{{ cuidador.telefono }}</td>
+              <td class="text-truncate">{{ cuidador.experiencia }}</td>
+              <td>{{ cuidador.zonaCobertura }}</td>
+              <td>
+                <span class="badge" [class.badge-success]="cuidador.vehiculo" [class.badge-secondary]="!cuidador.vehiculo">
+                  {{ cuidador.vehiculo ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td>{{ formatearFecha(cuidador.fechaRegistro) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab Transportistas -->
+    <div *ngIf="!cargando && tabActiva === 'transportistas'" class="tab-content">
+      <h2>Registros de Transportistas</h2>
+      <div class="table-container" *ngIf="transportistas.length > 0; else sinDatos">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Zona</th>
+              <th>Tipo Vehículo</th>
+              <th>Fecha Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transportista of transportistas">
+              <td>{{ transportista.id }}</td>
+              <td>{{ transportista.nombre }}</td>
+              <td>{{ transportista.email }}</td>
+              <td>{{ transportista.telefono }}</td>
+              <td>{{ transportista.zonaCobertura }}</td>
+              <td>
+                <span class="badge badge-info">{{ transportista.tipoVehiculo }}</span>
+              </td>
+              <td>{{ formatearFecha(transportista.fechaRegistro) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab Solicitudes Cuidado -->
+    <div *ngIf="!cargando && tabActiva === 'solicitudesCuidado'" class="tab-content">
+      <h2>Solicitudes de Cuidado</h2>
+      <div class="table-container" *ngIf="solicitudesCuidado.length > 0; else sinDatos">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Solicitante</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Adulto Mayor</th>
+              <th>Descripción</th>
+              <th>Zona</th>
+              <th>Fecha Solicitud</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let solicitud of solicitudesCuidado">
+              <td>{{ solicitud.id }}</td>
+              <td>{{ solicitud.nombre }}</td>
+              <td>{{ solicitud.email }}</td>
+              <td>{{ solicitud.telefono }}</td>
+              <td>{{ solicitud.nombreFamiliar }}</td>
+              <td class="text-truncate">{{ solicitud.descripcion }}</td>
+              <td>{{ solicitud.zona }}</td>
+              <td>{{ formatearFecha(solicitud.fechaSolicitud) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab Solicitudes Traslado -->
+    <div *ngIf="!cargando && tabActiva === 'solicitudesTraslado'" class="tab-content">
+      <h2>Solicitudes de Traslado</h2>
+      <div class="table-container" *ngIf="solicitudesTraslado.length > 0; else sinDatos">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Solicitante</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Adulto Mayor</th>
+              <th>Origen</th>
+              <th>Destino</th>
+              <th>Fecha/Hora Traslado</th>
+              <th>Fecha Solicitud</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let solicitud of solicitudesTraslado">
+              <td>{{ solicitud.id }}</td>
+              <td>{{ solicitud.nombre }}</td>
+              <td>{{ solicitud.email }}</td>
+              <td>{{ solicitud.telefono }}</td>
+              <td>{{ solicitud.nombreFamiliar }}</td>
+              <td>{{ solicitud.origen }}</td>
+              <td>{{ solicitud.destino }}</td>
+              <td>
+                <span class="badge badge-warning">{{ formatearFecha(solicitud.fechaHora) }}</span>
+              </td>
+              <td>{{ formatearFecha(solicitud.fechaSolicitud) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #sinDatos>
+      <div class="sin-datos">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <p>No hay registros disponibles</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+<div class="formulario-container">
+  <div class="formulario-card">
+    <div class="formulario-header">
+      <h1>Solicitud de Traslado</h1>
+      <p>Solicita un transporte seguro para adultos mayores</p>
+    </div>
+
+    <div class="mensaje-exito" *ngIf="mensaje">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      {{ mensaje }}
+    </div>
+
+    <div class="mensaje-error" *ngIf="error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      {{ error }}
+    </div>
+
+    <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()" class="formulario">
+      <div class="form-group">
+        <label for="nombre">Tu nombre completo *</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          formControlName="nombre" 
+          placeholder="Ej: Carlos Gómez"
+          [class.error]="solicitudForm.get('nombre')?.invalid && solicitudForm.get('nombre')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('nombre')?.invalid && solicitudForm.get('nombre')?.touched">
+          Nombre debe tener al menos 3 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="ejemplo@email.com"
+          [class.error]="solicitudForm.get('email')?.invalid && solicitudForm.get('email')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('email')?.invalid && solicitudForm.get('email')?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefono">Teléfono *</label>
+        <input 
+          type="tel" 
+          id="telefono" 
+          formControlName="telefono" 
+          placeholder="1234567890"
+          [class.error]="solicitudForm.get('telefono')?.invalid && solicitudForm.get('telefono')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('telefono')?.invalid && solicitudForm.get('telefono')?.touched">
+          Teléfono debe tener 10 dígitos
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="nombreFamiliar">Nombre del adulto mayor *</label>
+        <input 
+          type="text" 
+          id="nombreFamiliar" 
+          formControlName="nombreFamiliar" 
+          placeholder="Ej: Elena Rodríguez"
+          [class.error]="solicitudForm.get('nombreFamiliar')?.invalid && solicitudForm.get('nombreFamiliar')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('nombreFamiliar')?.invalid && solicitudForm.get('nombreFamiliar')?.touched">
+          Nombre debe tener al menos 3 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="origen">Origen *</label>
+        <input 
+          type="text" 
+          id="origen" 
+          formControlName="origen" 
+          placeholder="Ej: Recoleta, CABA"
+          [class.error]="solicitudForm.get('origen')?.invalid && solicitudForm.get('origen')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('origen')?.invalid && solicitudForm.get('origen')?.touched">
+          Origen es requerido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="destino">Destino *</label>
+        <input 
+          type="text" 
+          id="destino" 
+          formControlName="destino" 
+          placeholder="Ej: Hospital Italiano"
+          [class.error]="solicitudForm.get('destino')?.invalid && solicitudForm.get('destino')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('destino')?.invalid && solicitudForm.get('destino')?.touched">
+          Destino es requerido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="fechaHora">Fecha y hora del traslado *</label>
+        <input 
+          type="datetime-local" 
+          id="fechaHora" 
+          formControlName="fechaHora"
+          [class.error]="solicitudForm.get('fechaHora')?.invalid && solicitudForm.get('fechaHora')?.touched">
+        <span class="error-text" *ngIf="solicitudForm.get('fechaHora')?.invalid && solicitudForm.get('fechaHora')?.touched">
+          Fecha y hora son requeridas
+        </span>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="volver()">Volver</button>
+        <button type="submit" class="btn-primary" [disabled]="solicitudForm.invalid || enviando">
+          {{ enviando ? 'Enviando...' : 'Enviar Solicitud' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

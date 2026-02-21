@@ -1,0 +1,102 @@
+<div class="formulario-container">
+  <div class="formulario-card">
+    <div class="formulario-header">
+      <h1>Registro de Transportista</h1>
+      <p>Únete a CuidAR como transportista de adultos mayores</p>
+    </div>
+
+    <div class="mensaje-exito" *ngIf="mensaje">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      {{ mensaje }}
+    </div>
+
+    <div class="mensaje-error" *ngIf="error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      {{ error }}
+    </div>
+
+    <form [formGroup]="transportistaForm" (ngSubmit)="onSubmit()" class="formulario">
+      <div class="form-group">
+        <label for="nombre">Nombre completo *</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          formControlName="nombre" 
+          placeholder="Ej: Juan Pérez"
+          [class.error]="transportistaForm.get('nombre')?.invalid && transportistaForm.get('nombre')?.touched">
+        <span class="error-text" *ngIf="transportistaForm.get('nombre')?.invalid && transportistaForm.get('nombre')?.touched">
+          Nombre debe tener al menos 3 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="ejemplo@email.com"
+          [class.error]="transportistaForm.get('email')?.invalid && transportistaForm.get('email')?.touched">
+        <span class="error-text" *ngIf="transportistaForm.get('email')?.invalid && transportistaForm.get('email')?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefono">Teléfono *</label>
+        <input 
+          type="tel" 
+          id="telefono" 
+          formControlName="telefono" 
+          placeholder="1234567890"
+          [class.error]="transportistaForm.get('telefono')?.invalid && transportistaForm.get('telefono')?.touched">
+        <span class="error-text" *ngIf="transportistaForm.get('telefono')?.invalid && transportistaForm.get('telefono')?.touched">
+          Teléfono debe tener 10 dígitos
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="zonaCobertura">Zona de cobertura *</label>
+        <input 
+          type="text" 
+          id="zonaCobertura" 
+          formControlName="zonaCobertura" 
+          placeholder="Ej: Zona Sur, CABA"
+          [class.error]="transportistaForm.get('zonaCobertura')?.invalid && transportistaForm.get('zonaCobertura')?.touched">
+        <span class="error-text" *ngIf="transportistaForm.get('zonaCobertura')?.invalid && transportistaForm.get('zonaCobertura')?.touched">
+          Zona de cobertura es requerida
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="tipoVehiculo">Tipo de vehículo *</label>
+        <select 
+          id="tipoVehiculo" 
+          formControlName="tipoVehiculo"
+          [class.error]="transportistaForm.get('tipoVehiculo')?.invalid && transportistaForm.get('tipoVehiculo')?.touched">
+          <option value="">Selecciona un tipo</option>
+          <option value="Auto">Auto</option>
+          <option value="Camioneta">Camioneta</option>
+          <option value="Van">Van</option>
+          <option value="Ambulancia">Ambulancia</option>
+        </select>
+        <span class="error-text" *ngIf="transportistaForm.get('tipoVehiculo')?.invalid && transportistaForm.get('tipoVehiculo')?.touched">
+          Tipo de vehículo es requerido
+        </span>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="volver()">Volver</button>
+        <button type="submit" class="btn-primary" [disabled]="transportistaForm.invalid || enviando">
+          {{ enviando ? 'Enviando...' : 'Enviar Registro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

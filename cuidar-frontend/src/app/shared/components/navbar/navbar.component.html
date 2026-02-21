@@ -1,0 +1,21 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a routerLink="/" class="brand-logo">CuidAR</a>
+    </div>
+
+    <div class="navbar-menu">
+      <ng-container *ngIf="!isAdminLoggedIn">
+        <!-- Usuario público -->
+        <a routerLink="/" class="nav-link">Inicio</a>
+      </ng-container>
+
+      <ng-container *ngIf="isAdminLoggedIn">
+        <!-- Admin logueado -->
+        <a routerLink="/admin/panel" class="nav-link">Panel Admin</a>
+        <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+      </ng-container>
+    </div>
+  </div>
+</nav>
+

@@ -1,0 +1,68 @@
+<div class="listado-container">
+  <h1>Cuidadores Disponibles</h1>
+
+  <div class="filter-section">
+    <div class="form-group">
+      <label for="zona">Filtrar por Zona:</label>
+      <input 
+        type="text" 
+        id="zona" 
+        [(ngModel)]="zonaFiltro" 
+        (ngModelChange)="filtrarPorZona()"
+        class="form-control"
+        placeholder="Ingrese zona (ej: Zona Norte, Centro, etc.)">
+    </div>
+  </div>
+
+  <div class="loading-message" *ngIf="loading">
+    Cargando cuidadores...
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="cuidadores-grid" *ngIf="!loading && !errorMessage">
+    <div class="cuidador-card" *ngFor="let cuidador of cuidadores">
+      <div class="card-header">
+        <h3>{{ cuidador.nombre }}</h3>
+        <span class="badge" [class.disponible]="cuidador.disponible" [class.no-disponible]="!cuidador.disponible">
+          {{ cuidador.disponible ? 'Disponible' : 'No Disponible' }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <p><strong>Email:</strong> {{ cuidador.email }}</p>
+        <p><strong>Teléfono:</strong> {{ cuidador.telefono }}</p>
+        <p><strong>Zona:</strong> {{ cuidador.zona }}</p>
+        
+        <p *ngIf="cuidador.tarifaPorHora">
+          <strong>Tarifa por Hora:</strong> ${{ cuidador.tarifaPorHora }}
+        </p>
+        
+        <p *ngIf="cuidador.experienciaAnios">
+          <strong>Experiencia:</strong> {{ cuidador.experienciaAnios }} años
+        </p>
+        
+        <p *ngIf="cuidador.especialidades">
+          <strong>Especialidades:</strong> {{ cuidador.especialidades }}
+        </p>
+        
+        <p *ngIf="cuidador.presentacion" class="presentacion">
+          <strong>Presentación:</strong><br>
+          {{ cuidador.presentacion }}
+        </p>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-primary" [disabled]="!cuidador.disponible">
+          Contactar
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-message" *ngIf="cuidadores.length === 0">
+      <p>No se encontraron cuidadores disponibles{{ zonaFiltro ? ' en la zona especificada' : '' }}.</p>
+    </div>
+  </div>
+</div>

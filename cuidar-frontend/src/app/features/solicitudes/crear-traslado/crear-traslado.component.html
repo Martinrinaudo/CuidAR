@@ -1,0 +1,76 @@
+<div class="solicitud-container">
+  <div class="solicitud-card">
+    <h1>Nueva Solicitud de Traslado</h1>
+    
+    <form [formGroup]="trasladoForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nombreFamiliar">Nombre del Familiar</label>
+        <input 
+          type="text" 
+          id="nombreFamiliar" 
+          formControlName="nombreFamiliar" 
+          class="form-control"
+          [class.is-invalid]="trasladoForm.get('nombreFamiliar')?.invalid && trasladoForm.get('nombreFamiliar')?.touched">
+        <div class="error-message" *ngIf="trasladoForm.get('nombreFamiliar')?.invalid && trasladoForm.get('nombreFamiliar')?.touched">
+          <span *ngIf="trasladoForm.get('nombreFamiliar')?.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="trasladoForm.get('nombreFamiliar')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="origen">Dirección de Origen</label>
+        <input 
+          type="text" 
+          id="origen" 
+          formControlName="origen" 
+          class="form-control"
+          placeholder="Ingrese la dirección de origen"
+          [class.is-invalid]="trasladoForm.get('origen')?.invalid && trasladoForm.get('origen')?.touched">
+        <div class="error-message" *ngIf="trasladoForm.get('origen')?.invalid && trasladoForm.get('origen')?.touched">
+          <span *ngIf="trasladoForm.get('origen')?.errors?.['required']">El origen es requerido</span>
+          <span *ngIf="trasladoForm.get('origen')?.errors?.['minlength']">Mínimo 5 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="destino">Dirección de Destino</label>
+        <input 
+          type="text" 
+          id="destino" 
+          formControlName="destino" 
+          class="form-control"
+          placeholder="Ingrese la dirección de destino"
+          [class.is-invalid]="trasladoForm.get('destino')?.invalid && trasladoForm.get('destino')?.touched">
+        <div class="error-message" *ngIf="trasladoForm.get('destino')?.invalid && trasladoForm.get('destino')?.touched">
+          <span *ngIf="trasladoForm.get('destino')?.errors?.['required']">El destino es requerido</span>
+          <span *ngIf="trasladoForm.get('destino')?.errors?.['minlength']">Mínimo 5 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="fechaHora">Fecha y Hora del Traslado</label>
+        <input 
+          type="datetime-local" 
+          id="fechaHora" 
+          formControlName="fechaHora" 
+          class="form-control"
+          [class.is-invalid]="trasladoForm.get('fechaHora')?.invalid && trasladoForm.get('fechaHora')?.touched">
+        <div class="error-message" *ngIf="trasladoForm.get('fechaHora')?.invalid && trasladoForm.get('fechaHora')?.touched">
+          La fecha y hora son requeridas
+        </div>
+      </div>
+
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="trasladoForm.invalid || loading">
+        {{ loading ? 'Creando...' : 'Crear Solicitud' }}
+      </button>
+    </form>
+  </div>
+</div>
