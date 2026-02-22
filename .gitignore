@@ -5,3 +5,4 @@ CuidAR/obj/
 cuidar-frontend/node_modules/
 cuidar-frontend/.angular/
 **/appsettings.json
+CleanTables.csx
