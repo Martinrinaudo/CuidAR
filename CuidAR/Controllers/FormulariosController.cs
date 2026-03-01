@@ -27,6 +27,9 @@ namespace CuidAR.Controllers
                 Experiencia = dto.Experiencia,
                 ZonaCobertura = dto.ZonaCobertura,
                 Vehiculo = dto.Vehiculo,
+                Referencias = dto.Referencias,
+                Horario = dto.Horario,
+                Dias = dto.Dias,
                 FechaEnvio = DateTime.UtcNow
             };
 
@@ -46,6 +49,8 @@ namespace CuidAR.Controllers
                 Telefono = dto.Telefono,
                 ZonaCobertura = dto.ZonaCobertura,
                 TipoVehiculo = dto.TipoVehiculo,
+                AceptaSillaDeRuedas = dto.AceptaSillaDeRuedas,
+                AceptaPagoParticular = dto.AceptaPagoParticular,
                 FechaEnvio = DateTime.UtcNow
             };
 

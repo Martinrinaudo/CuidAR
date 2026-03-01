@@ -27,7 +27,9 @@ export class TransportistaComponent {
       email: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       zonaCobertura: ['', [Validators.required]],
-      tipoVehiculo: ['', [Validators.required]]
+      tipoVehiculo: ['', [Validators.required]],
+      aceptaSillaDeRuedas: [false],
+      aceptaPagoParticular: [false]
     });
   }
 

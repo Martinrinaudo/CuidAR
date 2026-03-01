@@ -28,7 +28,10 @@ export class CuidadorComponent {
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       experiencia: ['', [Validators.required, Validators.minLength(10)]],
       zonaCobertura: ['', [Validators.required]],
-      vehiculo: [false]
+      vehiculo: [false],
+      referencias: ['', [Validators.required, Validators.minLength(10)]],
+      horario: ['', [Validators.required]],
+      dias: ['', [Validators.required]]
     });
   }
 

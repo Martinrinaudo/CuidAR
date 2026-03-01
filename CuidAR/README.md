@@ -157,4 +157,18 @@ policy.WithOrigins("http://localhost:4200", "https://tu-otro-dominio.com")
 3. **Verificá que los formularios públicos funcionen sin token**
 4. **Probá el login del admin y los endpoints protegidos**
 
+---
+
+## ?? Deploy en Railway
+
+Este proyecto está listo para deploy en Railway. Seguí las instrucciones en [RAILWAY_DEPLOY.md](RAILWAY_DEPLOY.md).
+
+### Variables de Entorno Requeridas
+- `DATABASE_URL` - Connection string de PostgreSQL
+- `JWT_KEY` - Clave secreta para JWT
+- `ALLOWED_ORIGINS` - Orígenes permitidos para CORS (opcional)
+
+Ver `.env.example` para más detalles.
+
 ¡Todo listo para empezar a usar CuidAR! ??
+

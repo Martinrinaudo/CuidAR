@@ -7,16 +7,30 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Leer variables de entorno (Railway)
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") 
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY") 
+    ?? builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrEmpty(connectionString))
+    throw new InvalidOperationException("DATABASE_URL environment variable is not set");
+if (string.IsNullOrEmpty(jwtKey))
+    throw new InvalidOperationException("JWT_KEY environment variable is not set");
+
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Supabase")));
+    options.UseNpgsql(connectionString));
 
 // CORS
+var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(',') 
+    ?? new[] { "http://localhost:4200" };
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -30,7 +44,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+                Encoding.UTF8.GetBytes(jwtKey)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
@@ -100,4 +114,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+// Configurar puerto para Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
