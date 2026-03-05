@@ -19,6 +19,9 @@ if (string.IsNullOrEmpty(connectionString))
 if (string.IsNullOrEmpty(jwtKey))
     throw new InvalidOperationException("JWT_KEY environment variable is not set");
 
+// Debug: Mostrar los primeros caracteres del connection string
+Console.WriteLine($"Connection string: {connectionString?.Substring(0, Math.Min(50, connectionString?.Length ?? 0))}...");
+
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
