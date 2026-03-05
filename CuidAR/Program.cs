@@ -8,13 +8,14 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Leer variables de entorno (Railway)
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") 
+var connectionString = 
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") 
     ?? builder.Configuration.GetConnectionString("DefaultConnection");
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY") 
     ?? builder.Configuration["Jwt:Key"];
 
 if (string.IsNullOrEmpty(connectionString))
-    throw new InvalidOperationException("DATABASE_URL environment variable is not set");
+    throw new InvalidOperationException("No se encontró el connection string");
 if (string.IsNullOrEmpty(jwtKey))
     throw new InvalidOperationException("JWT_KEY environment variable is not set");
 
