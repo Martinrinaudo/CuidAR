@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd cuidar-frontend && npm run build",
+  "buildCommand": "cd cuidar-frontend && npm install && npm run build",
   "outputDirectory": "cuidar-frontend/dist/cuidar-frontend/browser",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
