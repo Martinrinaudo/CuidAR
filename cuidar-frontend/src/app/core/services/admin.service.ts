@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class AdminService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private readonly API_URL = 'https://localhost:7223/api/admin';
+  private readonly API_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co/functions/v1/admin';
   private readonly TOKEN_KEY = 'admin_token';
 
   login(email: string, password: string): Observable<any> {

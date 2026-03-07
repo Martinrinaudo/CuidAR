@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class FormulariosService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'https://localhost:7223/api/formularios';
+  private readonly API_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co/functions/v1/formularios';
 
   registrarCuidador(dto: {
     nombre: string;
