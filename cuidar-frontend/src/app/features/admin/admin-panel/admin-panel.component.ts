@@ -60,7 +60,7 @@ export class AdminPanelComponent implements OnInit {
   }
 
   cerrarSesion(): void {
-    this.adminService.logout();
+    this.adminService.logout().catch(err => console.error('Error al cerrar sesión:', err));
   }
 
   formatearFecha(fecha: string): string {

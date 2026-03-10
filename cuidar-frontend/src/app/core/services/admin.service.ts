@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, from, map } from 'rxjs';
 import { Router } from '@angular/router';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,17 +12,23 @@ export class AdminService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private readonly API_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co/functions/v1/admin';
-  private readonly TOKEN_KEY = 'admin_token';
+  private supabase: SupabaseClient;
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<{ token: string }>(`${this.API_URL}/login`, { email, password })
-      .pipe(
-        tap(response => {
-          if (response.token) {
-            localStorage.setItem(this.TOKEN_KEY, response.token);
-          }
-        })
-      );
+  constructor() {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  }
+
+  login(): Observable<void> {
+    return from(
+      this.supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/admin/panel'
+        }
+      })
+    ).pipe(
+      map(() => void 0)
+    );
   }
 
   getCuidadores(): Observable<any> {
@@ -39,16 +47,22 @@ export class AdminService {
     return this.http.get(`${this.API_URL}/solicitudes-traslado`);
   }
 
-  logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+  async logout(): Promise<void> {
+    await this.supabase.auth.signOut();
     this.router.navigate(['/admin/login']);
   }
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+  async isLoggedIn(): Promise<boolean> {
+    const { data: { session } } = await this.supabase.auth.getSession();
+    return !!session;
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+  async getToken(): Promise<string | null> {
+    const { data: { session } } = await this.supabase.auth.getSession();
+    return session?.access_token ?? null;
+  }
+
+  getSupabaseClient(): SupabaseClient {
+    return this.supabase;
   }
 }
