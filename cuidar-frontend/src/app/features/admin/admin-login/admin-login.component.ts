@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../core/services/admin.service';
+import { supabase } from '../../../core/supabase.client';
 
 @Component({
   selector: 'app-admin-login',
@@ -18,11 +19,23 @@ export class AdminLoginComponent implements OnInit {
   enviando: boolean = false;
 
   async ngOnInit() {
-    // Esperar a que Supabase procese el callback de OAuth
-    await this.adminService.waitForSessionInit();
+    // Intentar intercambiar el código de la URL por una sesión
+    if (window.location.search) {
+      try {
+        const { data } = await supabase.auth.exchangeCodeForSession(
+          window.location.search
+        );
+        if (data.session) {
+          console.log('Sesión obtenida del código:', data.session);
+          this.router.navigate(['/admin/panel']);
+          return;
+        }
+      } catch (error) {
+        console.error('Error al intercambiar código:', error);
+      }
+    }
     
-    // Verificar sesión usando getSession directamente
-    const supabase = this.adminService.getSupabaseClient();
+    // Verificar si ya hay sesión activa
     const { data: { session } } = await supabase.auth.getSession();
     
     console.log('Session en login:', session); // Debug
