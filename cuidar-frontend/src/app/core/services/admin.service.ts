@@ -22,7 +22,8 @@ export class AdminService {
       auth: {
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: true
+        detectSessionInUrl: true,
+        flowType: 'pkce'
       }
     });
     this.initializeSession();
@@ -46,7 +47,7 @@ export class AdminService {
       this.supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin + '/admin/panel'
+          redirectTo: 'https://cuid-ar-blush.vercel.app/admin/login'
         }
       })
     ).pipe(

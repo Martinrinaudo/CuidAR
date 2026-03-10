@@ -21,9 +21,15 @@ export class AdminLoginComponent implements OnInit {
     // Esperar a que Supabase procese el callback de OAuth
     await this.adminService.waitForSessionInit();
     
-    // Si ya está logueado, redirigir al panel
-    const isLoggedIn = await this.adminService.isLoggedIn();
-    if (isLoggedIn) {
+    // Verificar sesión usando getSession directamente
+    const supabase = this.adminService.getSupabaseClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    console.log('Session en login:', session); // Debug
+    
+    // Si hay sesión activa, redirigir al panel
+    if (session) {
+      console.log('Redirigiendo al panel admin');
       this.router.navigate(['/admin/panel']);
     }
   }
