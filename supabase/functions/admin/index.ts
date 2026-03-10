@@ -6,28 +6,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Lista de emails autorizados para acceder al panel admin
-const AUTHORIZED_ADMIN_EMAILS = [
-  "martinrinaudo03@gmail.com",
-  "beatrizaraya123@gmail.com",
-];
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_ANON_KEY")!,
-    {
-      global: {
-        headers: { Authorization: req.headers.get("Authorization")! },
-      },
-    }
-  );
-
-  const supabaseAdmin = createClient(
+  const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
@@ -36,7 +20,7 @@ serve(async (req) => {
   const path = url.pathname.split("/").pop();
 
   try {
-    // Verificar autenticación con Supabase
+    // Verificar token de Supabase
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "No autorizado" }), {
@@ -45,40 +29,44 @@ serve(async (req) => {
       });
     }
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    
+    const token = authHeader.replace("Bearer ", "");
+
+    // Verificar el token con Supabase
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Token inválido o expirado" }), {
+      return new Response(JSON.stringify({ error: "No autorizado" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
-    // Verificar que el email esté en la lista de administradores autorizados
-    if (!AUTHORIZED_ADMIN_EMAILS.includes(user.email!)) {
-      return new Response(JSON.stringify({ error: "Acceso denegado. No tienes permisos de administrador." }), {
+    // Verificar que el email esté en la lista de admins permitidos
+    const allowedEmails = ['martinrinaudo03@gmail.com', 'mmayafipmono@gmail.com'];
+    if (!allowedEmails.includes(user.email ?? '')) {
+      return new Response(JSON.stringify({ error: "Acceso denegado" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
 
     if (req.method === "GET" && path === "cuidadores") {
-      const { data } = await supabaseAdmin.from("RegistrosCuidador").select("*").order("FechaEnvio", { ascending: false });
+      const { data } = await supabase.from("RegistrosCuidador").select("*").order("FechaEnvio", { ascending: false });
       return new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     if (req.method === "GET" && path === "transportistas") {
-      const { data } = await supabaseAdmin.from("RegistrosTransportista").select("*").order("FechaEnvio", { ascending: false });
+      const { data } = await supabase.from("RegistrosTransportista").select("*").order("FechaEnvio", { ascending: false });
       return new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     if (req.method === "GET" && path === "solicitudes-cuidado") {
-      const { data } = await supabaseAdmin.from("SolicitudesCuidado").select("*").order("FechaEnvio", { ascending: false });
+      const { data } = await supabase.from("SolicitudesCuidado").select("*").order("FechaEnvio", { ascending: false });
       return new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     if (req.method === "GET" && path === "solicitudes-traslado") {
-      const { data } = await supabaseAdmin.from("SolicitudesTraslado").select("*").order("FechaEnvio", { ascending: false });
+      const { data } = await supabase.from("SolicitudesTraslado").select("*").order("FechaEnvio", { ascending: false });
       return new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
