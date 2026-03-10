@@ -2,24 +2,7 @@
 
 ## Configurar Google OAuth en Supabase
 
-### 1. Configurar credenciales de ambiente
-
-Crea el archivo `src/environments/environment.ts` copiando el ejemplo:
-
-```bash
-cp src/environments/environment.example.ts src/environments/environment.ts
-```
-
-Luego edita `environment.ts` con tus credenciales de Supabase:
-
-```typescript
-export const environment = {
-  supabaseUrl: 'https://cvakzhgrnarlcvixhqzx.supabase.co',
-  supabaseKey: 'TU_SUPABASE_ANON_KEY'
-};
-```
-
-### 2. Habilitar Google OAuth en Supabase
+### 1. Habilitar Google OAuth en Supabase
 
 1. Ve al [Dashboard de Supabase](https://app.supabase.com/project/cvakzhgrnarlcvixhqzx)
 2. Navega a **Authentication > Providers**
@@ -36,7 +19,7 @@ export const environment = {
 5. Regresa a Supabase y pega las credenciales de Google
 6. Guarda los cambios
 
-### 3. Configurar URLs permitidas en Supabase
+### 2. Configurar URLs permitidas en Supabase
 
 1. En el Dashboard de Supabase, ve a **Authentication > URL Configuration**
 2. En **Redirect URLs**, agrega:
@@ -45,7 +28,7 @@ export const environment = {
 3. En **Site URL**, configura:
    - `https://cuid-ar-blush.vercel.app`
 
-### 4. Administradores autorizados
+### 3. Administradores autorizados
 
 Los emails autorizados para acceder al panel admin están configurados en:
 - **Backend**: `supabase/functions/admin/index.ts` - líneas 10-13
@@ -55,7 +38,7 @@ Los emails autorizados para acceder al panel admin están configurados en:
 
 Para agregar más administradores, edita el array `AUTHORIZED_ADMIN_EMAILS` en el archivo de la Edge Function.
 
-### 5. Desplegar Edge Function (si hay cambios)
+### 4. Desplegar Edge Function (si hay cambios)
 
 Si modificas la lista de administradores, necesitas redesplegar la Edge Function:
 
