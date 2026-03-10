@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, from, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '../../../environments/environment';
+
+const SUPABASE_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2YWt6aGdybmFybGN2aXhocXp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTA1NjIsImV4cCI6MjA1NTc4NjU2Mn0.hHcPDPBn4HBpkSAmRGaRavlOcaTSp7FiVBPN4HBjPDY';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class AdminService {
   private sessionInitialized = false;
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
+    this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         autoRefreshToken: true,
         persistSession: true,
