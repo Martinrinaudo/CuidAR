@@ -18,6 +18,9 @@ export class AdminLoginComponent implements OnInit {
   enviando: boolean = false;
 
   async ngOnInit() {
+    // Esperar a que Supabase procese el callback de OAuth
+    await this.adminService.waitForSessionInit();
+    
     // Si ya está logueado, redirigir al panel
     const isLoggedIn = await this.adminService.isLoggedIn();
     if (isLoggedIn) {

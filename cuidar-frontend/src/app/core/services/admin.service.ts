@@ -13,9 +13,30 @@ export class AdminService {
   private router = inject(Router);
   private readonly API_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co/functions/v1/admin';
   private supabase: SupabaseClient;
+  private sessionInitialized = false;
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      }
+    });
+    this.initializeSession();
+  }
+
+  private async initializeSession(): Promise<void> {
+    // Esperar a que Supabase procese la sesión de la URL (callback de OAuth)
+    await this.supabase.auth.getSession();
+    this.sessionInitialized = true;
+  }
+
+  async waitForSessionInit(): Promise<void> {
+    // Esperar hasta que la sesión esté inicializada
+    while (!this.sessionInitialized) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
   }
 
   login(): Observable<void> {
