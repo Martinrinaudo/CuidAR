@@ -52,12 +52,12 @@ serve(async (req) => {
     }
 
     if (req.method === "GET" && path === "cuidadores") {
-      const { data } = await supabase.from("RegistrosCuidador").select("*").order("FechaEnvio", { ascending: false });
+      const { data } = await supabase.from("RegistrosCuidadores").select("*").order("FechaEnvio", { ascending: false });
       return new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     if (req.method === "GET" && path === "transportistas") {
-      const { data } = await supabase.from("RegistrosTransportista").select("*").order("FechaEnvio", { ascending: false });
+      const { data } = await supabase.from("RegistrosTransportistas").select("*").order("FechaEnvio", { ascending: false });
       return new Response(JSON.stringify(data), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
