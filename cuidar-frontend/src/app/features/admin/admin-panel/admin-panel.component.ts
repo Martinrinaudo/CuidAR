@@ -28,39 +28,35 @@ export class AdminPanelComponent implements OnInit {
     this.tabActiva = tab;
   }
 
-  cargarDatos(): void {
+  async cargarDatos(): Promise<void> {
     this.cargando = true;
     
-    // Cargar todos los datos
-    this.adminService.getCuidadores().subscribe({
-      next: (data) => this.cuidadores = data,
-      error: (err) => console.error('Error al cargar cuidadores:', err)
-    });
+    try {
+      // Cargar todos los datos en paralelo
+      const [cuidadores, transportistas, solicitudesCuidado, solicitudesTraslado] = await Promise.all([
+        this.adminService.getCuidadores(),
+        this.adminService.getTransportistas(),
+        this.adminService.getSolicitudesCuidado(),
+        this.adminService.getSolicitudesTraslado()
+      ]);
 
-    this.adminService.getTransportistas().subscribe({
-      next: (data) => this.transportistas = data,
-      error: (err) => console.error('Error al cargar transportistas:', err)
-    });
-
-    this.adminService.getSolicitudesCuidado().subscribe({
-      next: (data) => this.solicitudesCuidado = data,
-      error: (err) => console.error('Error al cargar solicitudes de cuidado:', err)
-    });
-
-    this.adminService.getSolicitudesTraslado().subscribe({
-      next: (data) => {
-        this.solicitudesTraslado = data;
-        this.cargando = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar solicitudes de traslado:', err);
-        this.cargando = false;
-      }
-    });
+      this.cuidadores = cuidadores;
+      this.transportistas = transportistas;
+      this.solicitudesCuidado = solicitudesCuidado;
+      this.solicitudesTraslado = solicitudesTraslado;
+    } catch (err) {
+      console.error('Error al cargar datos:', err);
+    } finally {
+      this.cargando = false;
+    }
   }
 
-  cerrarSesion(): void {
-    this.adminService.logout().catch(err => console.error('Error al cerrar sesión:', err));
+  async cerrarSesion(): Promise<void> {
+    try {
+      await this.adminService.logout();
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
   }
 
   formatearFecha(fecha: string): string {

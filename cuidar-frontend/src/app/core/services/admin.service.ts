@@ -1,46 +1,60 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, from, map } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '../supabase.client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private http = inject(HttpClient);
-  private router = inject(Router);
-  private readonly API_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co/functions/v1/admin';
-  private supabase: SupabaseClient = supabase;
+  constructor(private router: Router) {}
 
-  login(): Observable<void> {
-    return from(
-      supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: 'https://cuid-ar-blush.vercel.app/admin/login'
-        }
-      })
-    ).pipe(
-      map(() => void 0)
-    );
+  async login(): Promise<void> {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'https://cuid-ar-blush.vercel.app/admin/login'
+      }
+    });
   }
 
-  getCuidadores(): Observable<any> {
-    return this.http.get(`${this.API_URL}/cuidadores`);
+  async getCuidadores() {
+    const { data, error } = await supabase
+      .from('RegistrosCuidadores')
+      .select('*')
+      .order('FechaEnvio', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
   }
 
-  getTransportistas(): Observable<any> {
-    return this.http.get(`${this.API_URL}/transportistas`);
+  async getTransportistas() {
+    const { data, error } = await supabase
+      .from('RegistrosTransportistas')
+      .select('*')
+      .order('FechaEnvio', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
   }
 
-  getSolicitudesCuidado(): Observable<any> {
-    return this.http.get(`${this.API_URL}/solicitudes-cuidado`);
+  async getSolicitudesCuidado() {
+    const { data, error } = await supabase
+      .from('SolicitudesCuidado')
+      .select('*')
+      .order('FechaEnvio', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
   }
 
-  getSolicitudesTraslado(): Observable<any> {
-    return this.http.get(`${this.API_URL}/solicitudes-traslado`);
+  async getSolicitudesTraslado() {
+    const { data, error } = await supabase
+      .from('SolicitudesTraslado')
+      .select('*')
+      .order('FechaEnvio', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
   }
 
   async logout(): Promise<void> {
@@ -51,14 +65,5 @@ export class AdminService {
   async isLoggedIn(): Promise<boolean> {
     const { data: { session } } = await supabase.auth.getSession();
     return !!session;
-  }
-
-  async getToken(): Promise<string | null> {
-    const { data: { session } } = await supabase.auth.getSession();
-    return session?.access_token ?? null;
-  }
-
-  getSupabaseClient(): SupabaseClient {
-    return supabase;
   }
 }
