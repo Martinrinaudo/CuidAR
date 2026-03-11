@@ -33,28 +33,26 @@ export class TransportistaComponent {
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.transportistaForm.valid && !this.enviando) {
       this.enviando = true;
       this.error = '';
       this.mensaje = '';
 
-      this.formulariosService.registrarTransportista(this.transportistaForm.value).subscribe({
-        next: () => {
-          this.mensaje = '¡Registro exitoso! Nos pondremos en contacto contigo pronto.';
-          this.transportistaForm.reset();
-          this.enviando = false;
-          
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 3000);
-        },
-        error: (err) => {
-          this.error = 'Ocurrió un error al enviar el formulario. Por favor intenta de nuevo.';
-          this.enviando = false;
-          console.error('Error:', err);
-        }
-      });
+      try {
+        await this.formulariosService.registrarTransportista(this.transportistaForm.value);
+        this.mensaje = '¡Registro exitoso! Nos pondremos en contacto contigo pronto.';
+        this.transportistaForm.reset();
+        this.enviando = false;
+        
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
+      } catch (err) {
+        this.error = 'Ocurrió un error al enviar el formulario. Por favor intenta de nuevo.';
+        this.enviando = false;
+        console.error('Error:', err);
+      }
     } else {
       this.error = 'Por favor completa todos los campos correctamente.';
     }

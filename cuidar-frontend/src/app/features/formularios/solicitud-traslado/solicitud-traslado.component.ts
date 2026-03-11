@@ -33,7 +33,7 @@ export class SolicitudTrasladoComponent {
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.solicitudForm.valid && !this.enviando) {
       this.enviando = true;
       this.error = '';
@@ -45,22 +45,20 @@ export class SolicitudTrasladoComponent {
         formData.fechaHora = formData.fechaHora + ':00Z';
       }
 
-      this.formulariosService.crearSolicitudTraslado(formData).subscribe({
-        next: () => {
-          this.mensaje = '¡Solicitud enviada exitosamente! Pronto te contactaremos para coordinar el traslado.';
-          this.solicitudForm.reset();
-          this.enviando = false;
-          
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 3000);
-        },
-        error: (err) => {
-          this.error = 'Ocurrió un error al enviar la solicitud. Por favor intenta de nuevo.';
-          this.enviando = false;
-          console.error('Error:', err);
-        }
-      });
+      try {
+        await this.formulariosService.crearSolicitudTraslado(formData);
+        this.mensaje = '¡Solicitud enviada exitosamente! Pronto te contactaremos para coordinar el traslado.';
+        this.solicitudForm.reset();
+        this.enviando = false;
+        
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
+      } catch (err) {
+        this.error = 'Ocurrió un error al enviar la solicitud. Por favor intenta de nuevo.';
+        this.enviando = false;
+        console.error('Error:', err);
+      }
     } else {
       this.error = 'Por favor completa todos los campos correctamente.';
     }

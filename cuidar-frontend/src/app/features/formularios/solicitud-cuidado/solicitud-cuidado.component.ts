@@ -32,28 +32,26 @@ export class SolicitudCuidadoComponent {
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.solicitudForm.valid && !this.enviando) {
       this.enviando = true;
       this.error = '';
       this.mensaje = '';
 
-      this.formulariosService.crearSolicitudCuidado(this.solicitudForm.value).subscribe({
-        next: () => {
-          this.mensaje = '¡Solicitud enviada exitosamente! Pronto te contactaremos para coordinar.';
-          this.solicitudForm.reset();
-          this.enviando = false;
-          
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 3000);
-        },
-        error: (err) => {
-          this.error = 'Ocurrió un error al enviar la solicitud. Por favor intenta de nuevo.';
-          this.enviando = false;
-          console.error('Error:', err);
-        }
-      });
+      try {
+        await this.formulariosService.crearSolicitudCuidado(this.solicitudForm.value);
+        this.mensaje = '¡Solicitud enviada exitosamente! Pronto te contactaremos para coordinar.';
+        this.solicitudForm.reset();
+        this.enviando = false;
+        
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
+      } catch (err) {
+        this.error = 'Ocurrió un error al enviar la solicitud. Por favor intenta de nuevo.';
+        this.enviando = false;
+        console.error('Error:', err);
+      }
     } else {
       this.error = 'Por favor completa todos los campos correctamente.';
     }
