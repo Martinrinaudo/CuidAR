@@ -5,6 +5,7 @@ import { AdminService } from '../services/admin.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const adminService = inject(AdminService);
+  const ANON_KEY = 'sb_publishable_oFJObocsinXhow22T99Ocg_lZvTrKeq';
   
   // Solo agregar token a requests que vayan a las Edge Functions de admin
   if (req.url.includes('/functions/v1/admin')) {
@@ -13,7 +14,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         if (token) {
           req = req.clone({
             setHeaders: {
-              Authorization: `Bearer ${token}`
+              'Authorization': `Bearer ${token}`,
+              'apikey': ANON_KEY
             }
           });
         }
