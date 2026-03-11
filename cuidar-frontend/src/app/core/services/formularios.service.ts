@@ -5,7 +5,7 @@ import { supabase } from '../supabase.client';
 export class FormulariosService {
 
   async registrarCuidador(data: any) {
-    const { error } = await supabase.from('RegistrosCuidador').insert({
+    const { error } = await supabase.from('RegistrosCuidadores').insert({
       Nombre: data.nombre,
       Email: data.email,
       Telefono: data.telefono,
@@ -22,7 +22,7 @@ export class FormulariosService {
   }
 
   async registrarTransportista(data: any) {
-    const { error } = await supabase.from('RegistrosTransportista').insert({
+    const { error } = await supabase.from('RegistrosTransportistas').insert({
       Nombre: data.nombre,
       Email: data.email,
       Telefono: data.telefono,

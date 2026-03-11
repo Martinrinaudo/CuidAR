@@ -23,7 +23,7 @@ serve(async (req) => {
   try {
     const body = await req.json();
     if (req.method === "POST" && path === "cuidador") {
-      const { error } = await supabase.from("RegistrosCuidador").insert({
+      const { error } = await supabase.from("RegistrosCuidadores").insert({
         Nombre: body.nombre,
         Email: body.email,
         Telefono: body.telefono,
@@ -42,7 +42,7 @@ serve(async (req) => {
     }
 
     if (req.method === "POST" && path === "transportista") {
-      const { error } = await supabase.from("RegistrosTransportista").insert({
+      const { error } = await supabase.from("RegistrosTransportistas").insert({
         Nombre: body.nombre,
         Email: body.email,
         Telefono: body.telefono,
