@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <div class="home-container">
       <div class="hero-section">
+        <img src="/assets/logo.png" alt="CuidAR Logo" class="hero-logo">
         <h1>Bienvenido a CuidAR</h1>
         <p class="subtitle">Conectamos cuidadores profesionales y transportistas con familias que necesitan servicios de calidad para adultos mayores</p>
       </div>

@@ -26,11 +26,23 @@
   font-weight: 700;
   text-decoration: none;
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo .logo {
+  height: 50px;
+  width: auto;
+  transition: var(--transition);
 }
 
 .brand-logo:hover {
-  color: var(--color-secondary);
+  opacity: 0.9;
   text-decoration: none;
+}
+
+.brand-logo:hover .logo {
+  transform: scale(1.05);
 }
 
 .navbar-menu {
