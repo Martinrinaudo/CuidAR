@@ -4,6 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Authorization": "Bearer sb_publishable_oFJObocsinXhow22T99Ocg_lZvTrKeq"
 };
 
 serve(async (req) => {
@@ -13,7 +14,7 @@ serve(async (req) => {
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    "sb_publishable_oFJObocsinXhow22T99Ocg_lZvTrKeq"
   );
 
   const url = new URL(req.url);

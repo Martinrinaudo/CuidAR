@@ -8,6 +8,11 @@ import { Observable } from 'rxjs';
 export class FormulariosService {
   private http = inject(HttpClient);
   private readonly API_URL = 'https://cvakzhgrnarlcvixhqzx.supabase.co/functions/v1/formularios';
+  
+  private readonly headers = {
+    'apikey': 'sb_publishable_oFJObocsinXhow22T99Ocg_lZvTrKeq',
+    'Content-Type': 'application/json'
+  };
 
   registrarCuidador(dto: {
     nombre: string;
@@ -17,7 +22,7 @@ export class FormulariosService {
     zonaCobertura: string;
     vehiculo: boolean;
   }): Observable<any> {
-    return this.http.post(`${this.API_URL}/cuidador`, dto);
+    return this.http.post(`${this.API_URL}/cuidador`, dto, { headers: this.headers });
   }
 
   registrarTransportista(dto: {
@@ -27,7 +32,7 @@ export class FormulariosService {
     zonaCobertura: string;
     tipoVehiculo: string;
   }): Observable<any> {
-    return this.http.post(`${this.API_URL}/transportista`, dto);
+    return this.http.post(`${this.API_URL}/transportista`, dto, { headers: this.headers });
   }
 
   crearSolicitudCuidado(dto: {
@@ -38,7 +43,7 @@ export class FormulariosService {
     descripcion: string;
     zona: string;
   }): Observable<any> {
-    return this.http.post(`${this.API_URL}/solicitud-cuidado`, dto);
+    return this.http.post(`${this.API_URL}/solicitud-cuidado`, dto, { headers: this.headers });
   }
 
   crearSolicitudTraslado(dto: {
@@ -50,6 +55,6 @@ export class FormulariosService {
     destino: string;
     fechaHora: string;
   }): Observable<any> {
-    return this.http.post(`${this.API_URL}/solicitud-traslado`, dto);
+    return this.http.post(`${this.API_URL}/solicitud-traslado`, dto, { headers: this.headers });
   }
 }
