@@ -42,7 +42,7 @@ serve(async (req) => {
     }
 
     // Verificar que el email esté en la lista de admins permitidos
-    const allowedEmails = ['martinrinaudo03@gmail.com', 'mmayafipmono@gmail.com'];
+    const allowedEmails = ['martinrinaudo03@gmail.com', 'beatrizaraya123@gmail.com'];
     if (!allowedEmails.includes(user.email ?? '')) {
       return new Response(JSON.stringify({ error: "Acceso denegado" }), {
         status: 403,
