@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export const supabase = createClient(
   'https://cvakzhgrnarlcvixhqzx.supabase.co',
-  'sb_publishable_oFJObocsinXhow22T99Ocg_lZvTrKeq',
+  'sb_publishable_qBiD19abPu2DT0jNeK9ilA_1xXcBeUX',
   {
     auth: {
       detectSessionInUrl: true,
