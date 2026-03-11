@@ -65,18 +65,18 @@
           </thead>
           <tbody>
             <tr *ngFor="let cuidador of cuidadores">
-              <td>{{ cuidador.id }}</td>
-              <td>{{ cuidador.nombre }}</td>
-              <td>{{ cuidador.email }}</td>
-              <td>{{ cuidador.telefono }}</td>
-              <td class="text-truncate">{{ cuidador.experiencia }}</td>
-              <td>{{ cuidador.zonaCobertura }}</td>
+              <td>{{ cuidador.Id }}</td>
+              <td>{{ cuidador.Nombre }}</td>
+              <td>{{ cuidador.Email }}</td>
+              <td>{{ cuidador.Telefono }}</td>
+              <td class="text-truncate">{{ cuidador.Experiencia }}</td>
+              <td>{{ cuidador.ZonaCobertura }}</td>
               <td>
-                <span class="badge" [class.badge-success]="cuidador.vehiculo" [class.badge-secondary]="!cuidador.vehiculo">
-                  {{ cuidador.vehiculo ? 'Sí' : 'No' }}
+                <span class="badge" [class.badge-success]="cuidador.Vehiculo" [class.badge-secondary]="!cuidador.Vehiculo">
+                  {{ cuidador.Vehiculo ? 'Sí' : 'No' }}
                 </span>
               </td>
-              <td>{{ formatearFecha(cuidador.fechaRegistro) }}</td>
+              <td>{{ formatearFecha(cuidador.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
@@ -101,15 +101,15 @@
           </thead>
           <tbody>
             <tr *ngFor="let transportista of transportistas">
-              <td>{{ transportista.id }}</td>
-              <td>{{ transportista.nombre }}</td>
-              <td>{{ transportista.email }}</td>
-              <td>{{ transportista.telefono }}</td>
-              <td>{{ transportista.zonaCobertura }}</td>
+              <td>{{ transportista.Id }}</td>
+              <td>{{ transportista.Nombre }}</td>
+              <td>{{ transportista.Email }}</td>
+              <td>{{ transportista.Telefono }}</td>
+              <td>{{ transportista.ZonaCobertura }}</td>
               <td>
-                <span class="badge badge-info">{{ transportista.tipoVehiculo }}</span>
+                <span class="badge badge-info">{{ transportista.TipoVehiculo }}</span>
               </td>
-              <td>{{ formatearFecha(transportista.fechaRegistro) }}</td>
+              <td>{{ formatearFecha(transportista.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
@@ -135,14 +135,14 @@
           </thead>
           <tbody>
             <tr *ngFor="let solicitud of solicitudesCuidado">
-              <td>{{ solicitud.id }}</td>
-              <td>{{ solicitud.nombre }}</td>
-              <td>{{ solicitud.email }}</td>
-              <td>{{ solicitud.telefono }}</td>
-              <td>{{ solicitud.nombreFamiliar }}</td>
-              <td class="text-truncate">{{ solicitud.descripcion }}</td>
-              <td>{{ solicitud.zona }}</td>
-              <td>{{ formatearFecha(solicitud.fechaSolicitud) }}</td>
+              <td>{{ solicitud.Id }}</td>
+              <td>{{ solicitud.Nombre }}</td>
+              <td>{{ solicitud.Email }}</td>
+              <td>{{ solicitud.Telefono }}</td>
+              <td>{{ solicitud.NombreFamiliar }}</td>
+              <td class="text-truncate">{{ solicitud.Descripcion }}</td>
+              <td>{{ solicitud.Zona }}</td>
+              <td>{{ formatearFecha(solicitud.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
@@ -169,17 +169,17 @@
           </thead>
           <tbody>
             <tr *ngFor="let solicitud of solicitudesTraslado">
-              <td>{{ solicitud.id }}</td>
-              <td>{{ solicitud.nombre }}</td>
-              <td>{{ solicitud.email }}</td>
-              <td>{{ solicitud.telefono }}</td>
-              <td>{{ solicitud.nombreFamiliar }}</td>
-              <td>{{ solicitud.origen }}</td>
-              <td>{{ solicitud.destino }}</td>
+              <td>{{ solicitud.Id }}</td>
+              <td>{{ solicitud.Nombre }}</td>
+              <td>{{ solicitud.Email }}</td>
+              <td>{{ solicitud.Telefono }}</td>
+              <td>{{ solicitud.NombreFamiliar }}</td>
+              <td>{{ solicitud.Origen }}</td>
+              <td>{{ solicitud.Destino }}</td>
               <td>
-                <span class="badge badge-warning">{{ formatearFecha(solicitud.fechaHora) }}</span>
+                <span class="badge badge-warning">{{ formatearFecha(solicitud.FechaHora) }}</span>
               </td>
-              <td>{{ formatearFecha(solicitud.fechaSolicitud) }}</td>
+              <td>{{ formatearFecha(solicitud.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
