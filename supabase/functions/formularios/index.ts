@@ -18,9 +18,9 @@ serve(async (req) => {
 
   const url = new URL(req.url);
   const path = url.pathname.split("/").pop();
-  const body = await req.json();
 
   try {
+    const body = await req.json();
     if (req.method === "POST" && path === "cuidador") {
       const { error } = await supabase.from("RegistrosCuidador").insert({
         Nombre: body.nombre,
