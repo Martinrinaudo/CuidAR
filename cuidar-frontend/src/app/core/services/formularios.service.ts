@@ -13,7 +13,8 @@ export class FormulariosService {
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'apikey': this.ANON_KEY
+      'apikey': this.ANON_KEY,
+      'Authorization': `Bearer ${this.ANON_KEY}`
     });
   }
 
