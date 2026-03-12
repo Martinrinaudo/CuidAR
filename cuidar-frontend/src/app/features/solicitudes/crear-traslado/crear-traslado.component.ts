@@ -57,7 +57,7 @@ export class CrearTrasladoComponent {
           this.router.navigate(['/home']);
         }, 2000);
       },
-      error: (error) => {
+      error: (error: any) => {
         this.loading = false;
         this.errorMessage = error.error?.message || 'Error al crear solicitud. Intente nuevamente.';
         console.error('Error:', error);
