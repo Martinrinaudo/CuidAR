@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CuidadoresService, Cuidador } from '../../../core/services/cuidadores.service';
 
 @Component({
   selector: 'app-listado',
