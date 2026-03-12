@@ -1,6 +1,21 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { supabase } from '../../../core/supabase.client';
+
+interface Cuidador {
+  id?: number;
+  Nombre: string;
+  Email: string;
+  Telefono: string;
+  Experiencia: string;
+  ZonaCobertura: string;
+  Horario?: string;
+  Dias?: string;
+  Referencias?: string;
+  Vehiculo?: boolean;
+  FechaEnvio?: string;
+}
 
 @Component({
   selector: 'app-listado',
@@ -10,8 +25,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './listado.component.css'
 })
 export class ListadoComponent implements OnInit {
-  private cuidadoresService = inject(CuidadoresService);
-
   cuidadores: Cuidador[] = [];
   zonaFiltro = '';
   loading = false;
@@ -21,21 +34,28 @@ export class ListadoComponent implements OnInit {
     this.cargarCuidadores();
   }
 
-  cargarCuidadores(): void {
+  async cargarCuidadores(): Promise<void> {
     this.loading = true;
     this.errorMessage = '';
 
-    this.cuidadoresService.getAll(this.zonaFiltro || undefined).subscribe({
-      next: (cuidadores) => {
-        this.cuidadores = cuidadores;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
-        this.errorMessage = 'Error al cargar los cuidadores';
-        console.error('Error:', error);
+    try {
+      let query = supabase.from('RegistrosCuidadores').select('*');
+      
+      if (this.zonaFiltro) {
+        query = query.ilike('ZonaCobertura', `%${this.zonaFiltro}%`);
       }
-    });
+      
+      const { data, error } = await query;
+      
+      if (error) throw error;
+      
+      this.cuidadores = data || [];
+    } catch (error) {
+      this.errorMessage = 'Error al cargar los cuidadores';
+      console.error('Error:', error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   filtrarPorZona(): void {

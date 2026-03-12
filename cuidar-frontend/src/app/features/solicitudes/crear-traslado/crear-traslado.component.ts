@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SolicitudesService } from '../../../core/services/solicitudes.service';
+import { FormulariosService } from '../../../core/services/formularios.service';
 
 @Component({
   selector: 'app-crear-traslado',
@@ -13,7 +13,7 @@ import { SolicitudesService } from '../../../core/services/solicitudes.service';
 })
 export class CrearTrasladoComponent {
   private fb = inject(FormBuilder);
-  private solicitudesService = inject(SolicitudesService);
+  private formulariosService = inject(FormulariosService);
   private router = inject(Router);
 
   trasladoForm: FormGroup;
@@ -30,7 +30,7 @@ export class CrearTrasladoComponent {
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.trasladoForm.invalid) {
       return;
     }
@@ -41,27 +41,27 @@ export class CrearTrasladoComponent {
 
     const formValue = this.trasladoForm.value;
     
-    // Convertir fecha a formato ISO con Z para UTC
     const dto = {
+      nombre: formValue.nombreFamiliar,
+      email: '',
+      telefono: '',
       nombreFamiliar: formValue.nombreFamiliar,
       origen: formValue.origen,
       destino: formValue.destino,
       fechaHora: new Date(formValue.fechaHora).toISOString()
     };
 
-    this.solicitudesService.crearTraslado(dto).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.successMessage = 'Solicitud de traslado creada exitosamente';
-        setTimeout(() => {
-          this.router.navigate(['/home']);
-        }, 2000);
-      },
-      error: (error: any) => {
-        this.loading = false;
-        this.errorMessage = error.error?.message || 'Error al crear solicitud. Intente nuevamente.';
-        console.error('Error:', error);
-      }
-    });
+    try {
+      await this.formulariosService.crearSolicitudTraslado(dto);
+      this.loading = false;
+      this.successMessage = 'Solicitud de traslado creada exitosamente';
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 2000);
+    } catch (error: any) {
+      this.loading = false;
+      this.errorMessage = error.message || 'Error al crear solicitud. Intente nuevamente.';
+      console.error('Error:', error);
+    }
   }
 }

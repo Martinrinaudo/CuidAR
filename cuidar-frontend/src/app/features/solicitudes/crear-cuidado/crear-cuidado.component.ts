@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SolicitudesService } from '../../../core/services/solicitudes.service';
+import { FormulariosService } from '../../../core/services/formularios.service';
 
 @Component({
   selector: 'app-crear-cuidado',
@@ -13,7 +13,7 @@ import { SolicitudesService } from '../../../core/services/solicitudes.service';
 })
 export class CrearCuidadoComponent {
   private fb = inject(FormBuilder);
-  private solicitudesService = inject(SolicitudesService);
+  private formulariosService = inject(FormulariosService);
   private router = inject(Router);
 
   cuidadoForm: FormGroup;
@@ -31,7 +31,7 @@ export class CrearCuidadoComponent {
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.cuidadoForm.invalid) {
       return;
     }
@@ -42,28 +42,26 @@ export class CrearCuidadoComponent {
 
     const formValue = this.cuidadoForm.value;
     
-    // Convertir fechas a formato ISO con Z para UTC
     const dto = {
+      nombre: formValue.nombreFamiliar,
+      email: '',
+      telefono: '',
       nombreFamiliar: formValue.nombreFamiliar,
       descripcion: formValue.descripcion,
-      domicilio: formValue.domicilio,
-      fechaInicio: new Date(formValue.fechaInicio).toISOString(),
-      fechaFin: new Date(formValue.fechaFin).toISOString()
+      zona: formValue.domicilio
     };
 
-    this.solicitudesService.crearCuidado(dto).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.successMessage = 'Solicitud de cuidado creada exitosamente';
-        setTimeout(() => {
-          this.router.navigate(['/home']);
-        }, 2000);
-      },
-      error: (error) => {
-        this.loading = false;
-        this.errorMessage = error.error?.message || 'Error al crear solicitud. Intente nuevamente.';
-        console.error('Error:', error);
-      }
-    });
+    try {
+      await this.formulariosService.crearSolicitudCuidado(dto);
+      this.loading = false;
+      this.successMessage = 'Solicitud de cuidado creada exitosamente';
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 2000);
+    } catch (error: any) {
+      this.loading = false;
+      this.errorMessage = error.message || 'Error al crear solicitud. Intente nuevamente.';
+      console.error('Error:', error);
+    }
   }
 }
