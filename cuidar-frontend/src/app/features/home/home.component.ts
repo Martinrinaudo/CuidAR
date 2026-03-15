@@ -33,59 +33,108 @@ import { RouterLink } from '@angular/router';
       </div>
 
       <div class="cards-grid">
-        <div class="service-card card-green">
-          <div class="card-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="8.5" cy="7" r="4"/>
-              <polyline points="17 11 19 13 23 9"/>
-            </svg>
-          </div>
-          <h3>Quiero ser cuidador</h3>
-          <p>Únete a nuestra red de profesionales y ayuda a familias en tu zona</p>
-          <a routerLink="/formularios/cuidador" class="btn btn-primary">Registrarme</a>
-        </div>
 
-        <div class="service-card card-amber">
-          <div class="card-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="3" width="15" height="13"/>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
+        <!-- Cuidador -->
+        <a routerLink="/formularios/cuidador" class="big-card card-bg-green">
+          <div class="big-card-icon">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <!-- Cuidador (persona joven) -->
+              <circle cx="42" cy="28" r="14"/>
+              <path d="M20 80 Q28 54 42 54 Q56 54 64 80Z"/>
+              <!-- Adulto mayor con bastón -->
+              <circle cx="82" cy="32" r="11"/>
+              <path d="M65 84 Q72 58 82 58 Q90 58 96 72L92 84Z"/>
+              <line x1="92" y1="68" x2="100" y2="90" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+              <!-- Corazón -->
+              <path d="M52 48 C52 44 48 40 44 43 C40 40 36 44 36 48 C36 52 44 58 44 58 C44 58 52 52 52 48Z" opacity="0.6"/>
             </svg>
           </div>
-          <h3>Quiero ser transportista</h3>
-          <p>Ofrecé servicios de traslado seguro y accesible para adultos mayores</p>
-          <a routerLink="/formularios/transportista" class="btn btn-secondary">Registrarme</a>
-        </div>
+          <div class="big-card-body">
+            <h3>Quiero ser Cuidador</h3>
+            <p>Únete a nuestra red de cuidadores calificados</p>
+            <span class="big-card-btn">Registrarse como Cuidador</span>
+          </div>
+        </a>
 
-        <div class="service-card card-indigo">
-          <div class="card-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        <!-- Transportista -->
+        <a routerLink="/formularios/transportista" class="big-card card-bg-amber">
+          <div class="big-card-icon">
+            <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <!-- Van/Ambulancia con rampa -->
+              <rect x="5" y="30" width="75" height="44" rx="6"/>
+              <rect x="80" y="42" width="32" height="32" rx="4"/>
+              <rect x="12" y="36" width="28" height="20" rx="3" fill="rgba(255,255,255,0.35)"/>
+              <rect x="44" y="36" width="24" height="20" rx="3" fill="rgba(255,255,255,0.35)"/>
+              <!-- Ruedas -->
+              <circle cx="25" cy="78" r="11" fill="rgba(0,0,0,.25)"/>
+              <circle cx="25" cy="78" r="5"/>
+              <circle cx="85" cy="78" r="11" fill="rgba(0,0,0,.25)"/>
+              <circle cx="85" cy="78" r="5"/>
+              <!-- Rampa -->
+              <line x1="80" y1="74" x2="55" y2="96" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+              <line x1="75" y1="74" x2="50" y2="96" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3>Necesito una cuidadora</h3>
-          <p>Solicitá una cuidadora profesional para tu familiar adulto mayor</p>
-          <a routerLink="/formularios/solicitud-cuidado" class="btn btn-indigo">Solicitar</a>
-        </div>
+          <div class="big-card-body">
+            <h3>Quiero ser Transportista</h3>
+            <p>Ofrece traslados seguros y cómodos</p>
+            <span class="big-card-btn">Registrarse como Transportista</span>
+          </div>
+        </a>
 
-        <div class="service-card card-rose">
-          <div class="card-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
+        <!-- Solicitud Cuidado -->
+        <a routerLink="/formularios/solicitud-cuidado" class="big-card card-bg-indigo">
+          <div class="big-card-icon">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <!-- Persona mayor sentada -->
+              <circle cx="72" cy="26" r="13"/>
+              <path d="M55 85 Q60 55 72 55 Q84 55 90 72L86 85Z"/>
+              <!-- Silla -->
+              <rect x="50" y="75" width="40" height="6" rx="3"/>
+              <rect x="50" y="75" width="6" height="22" rx="3"/>
+              <rect x="84" y="75" width="6" height="22" rx="3"/>
+              <!-- Cuidadora (persona) -->
+              <circle cx="32" cy="34" r="12"/>
+              <path d="M16 86 Q22 60 32 60 Q42 60 48 78L44 86Z"/>
+              <!-- Brazo apoyando -->
+              <path d="M44 68 Q58 66 66 72" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3>Necesito un traslado</h3>
-          <p>Organizá un traslado seguro y cómodo para tu familiar</p>
-          <a routerLink="/formularios/solicitud-traslado" class="btn btn-rose">Solicitar</a>
-        </div>
+          <div class="big-card-body">
+            <h3>Necesito una Cuidadora</h3>
+            <p>Encuentra la mejor atención para tus familiares</p>
+            <span class="big-card-btn">Buscar Cuidadora</span>
+          </div>
+        </a>
+
+        <!-- Solicitud Traslado -->
+        <a routerLink="/formularios/solicitud-traslado" class="big-card card-bg-rose">
+          <div class="big-card-icon">
+            <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <!-- Van accesible -->
+              <rect x="5" y="28" width="80" height="46" rx="8"/>
+              <rect x="85" y="40" width="28" height="34" rx="5"/>
+              <rect x="12" y="34" width="30" height="22" rx="3" fill="rgba(255,255,255,0.3)"/>
+              <rect x="46" y="34" width="26" height="22" rx="3" fill="rgba(255,255,255,0.3)"/>
+              <!-- Ruedas -->
+              <circle cx="28" cy="78" r="12" fill="rgba(0,0,0,.25)"/>
+              <circle cx="28" cy="78" r="5"/>
+              <circle cx="88" cy="78" r="12" fill="rgba(0,0,0,.25)"/>
+              <circle cx="88" cy="78" r="5"/>
+              <!-- Símbolo silla de ruedas -->
+              <circle cx="110" cy="38" r="5"/>
+              <path d="M107 44 L110 55 L118 55" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M110 55 L107 65" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <circle cx="107" cy="68" r="4" fill="none" stroke="currentColor" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="big-card-body">
+            <h3>Necesito un Traslado</h3>
+            <p>Solicita traslados médicos o recreativos</p>
+            <span class="big-card-btn">Solicitar Traslado</span>
+          </div>
+        </a>
+
       </div>
     </section>
 

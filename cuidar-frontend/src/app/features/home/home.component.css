@@ -92,68 +92,103 @@
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
 }
 
-/* Card base */
-.service-card {
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  padding: 2rem 1.75rem 1.75rem;
-  box-shadow: var(--shadow-sm);
-  border: 1.5px solid var(--gray-200);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  transition: var(--transition);
-  cursor: default;
-}
-.service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
-
-.card-icon-wrap {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-lg);
+/* Big solid cards from screenshot */
+.big-card {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 1.5rem;
+  padding: 2.25rem 2rem;
+  border-radius: 1.25rem;
+  color: var(--white);
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s;
+  cursor: pointer;
+}
+.big-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  text-decoration: none;
+}
+
+.big-card-icon {
+  width: 110px;
+  height: auto;
   flex-shrink: 0;
-  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.95);
 }
-.card-green  .card-icon-wrap { background: var(--green-100); color: var(--green-700); }
-.card-amber  .card-icon-wrap { background: var(--amber-100); color: #b45309; }
-.card-indigo .card-icon-wrap { background: var(--indigo-100); color: var(--indigo-600); }
-.card-rose   .card-icon-wrap { background: var(--rose-100); color: var(--rose-600); }
+.big-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
 
-.card-green  { border-top: 3px solid var(--green-500); }
-.card-amber  { border-top: 3px solid var(--amber-400); }
-.card-indigo { border-top: 3px solid var(--indigo-500); }
-.card-rose   { border-top: 3px solid var(--rose-500); }
-
-.service-card h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--gray-900);
+.big-card h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--white);
   margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
 }
-.service-card p {
+.big-card p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+  margin: 0 0 0.75rem 0;
+}
+
+.big-card-btn {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-full);
   font-size: 0.9rem;
-  color: var(--gray-500);
-  line-height: 1.6;
-  flex-grow: 1;
-  margin: 0;
+  font-weight: 700;
+  color: var(--white);
+  transition: opacity 0.2s;
 }
-.service-card .btn {
-  margin-top: 0.5rem;
-  font-size: 0.88rem;
-  padding: 0.6rem 1.4rem;
-  width: 100%;
-  justify-content: center;
+.big-card:hover .big-card-btn {
+  opacity: 0.9;
+}
+
+/* Colors matching screenshot */
+.card-bg-green {
+  background: #205e3e; /* Dark green */
+}
+.card-bg-green .big-card-btn {
+  background: #369c5e; /* Lighter vivid green */
+}
+
+.card-bg-amber {
+  background: #e3b052; /* Earthy yellow/amber */
+  color: #3b2a0c;
+}
+.card-bg-amber h3 { color: #291e08; }
+.card-bg-amber p { color: rgba(59, 42, 12, 0.8); }
+.card-bg-amber .big-card-icon { color: #bc7c26; }
+.card-bg-amber .big-card-btn {
+  background: #bd7916; /* Darker amber */
+  color: var(--white);
+}
+
+.card-bg-indigo {
+  background: #50558b; /* Muted indigo */
+}
+.card-bg-indigo .big-card-icon { color: rgba(255, 255, 255, 0.6); }
+.card-bg-indigo .big-card-btn {
+  background: #646fb3; /* Lighter indigo */
+}
+
+.card-bg-rose {
+  background: #df6469; /* Soft rose red */
+}
+.card-bg-rose .big-card-icon { color: #c44047; }
+.card-bg-rose .big-card-btn {
+  background: #c34348; /* Darker red */
 }
 
 /* ── Why us ─────────────────────────────────── */
