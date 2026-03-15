@@ -1,185 +1,215 @@
 <div class="panel-container">
-  <div class="panel-header">
+  <!-- Header -->
+  <header class="panel-header">
     <div class="header-content">
-      <h1>Panel de Administración</h1>
+      <div class="header-brand">
+        <img src="assets/logo.png" alt="CuidAR">
+        <div class="header-brand-text">
+          <span class="header-brand-name">CuidAR</span>
+          <span class="header-brand-sub">Panel de Administración</span>
+        </div>
+      </div>
       <button class="btn-logout" (click)="cerrarSesion()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-          <polyline points="16 17 21 12 16 7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
         </svg>
-        Cerrar Sesión
+        <span>Cerrar Sesión</span>
       </button>
+    </div>
+  </header>
+
+  <!-- Stats strip -->
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-chip">
+        <span class="stat-dot stat-dot-green"></span>
+        <span class="stat-label">Cuidadores</span>
+        <span class="stat-count">{{ cuidadores.length }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-dot stat-dot-amber"></span>
+        <span class="stat-label">Transportistas</span>
+        <span class="stat-count">{{ transportistas.length }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-dot stat-dot-indigo"></span>
+        <span class="stat-label">Sol. Cuidado</span>
+        <span class="stat-count">{{ solicitudesCuidado.length }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-dot stat-dot-rose"></span>
+        <span class="stat-label">Sol. Traslado</span>
+        <span class="stat-count">{{ solicitudesTraslado.length }}</span>
+      </div>
     </div>
   </div>
 
+  <!-- Tabs -->
   <div class="tabs">
-    <button 
-      class="tab" 
-      [class.active]="tabActiva === 'cuidadores'"
-      (click)="cambiarTab('cuidadores')">
-      Cuidadores ({{ cuidadores.length }})
+    <button class="tab" [class.active]="tabActiva === 'cuidadores'" (click)="cambiarTab('cuidadores')">
+      Cuidadores
     </button>
-    <button 
-      class="tab" 
-      [class.active]="tabActiva === 'transportistas'"
-      (click)="cambiarTab('transportistas')">
-      Transportistas ({{ transportistas.length }})
+    <button class="tab" [class.active]="tabActiva === 'transportistas'" (click)="cambiarTab('transportistas')">
+      Transportistas
     </button>
-    <button 
-      class="tab" 
-      [class.active]="tabActiva === 'solicitudesCuidado'"
-      (click)="cambiarTab('solicitudesCuidado')">
-      Solicitudes Cuidado ({{ solicitudesCuidado.length }})
+    <button class="tab" [class.active]="tabActiva === 'solicitudesCuidado'" (click)="cambiarTab('solicitudesCuidado')">
+      Solicitudes Cuidado
     </button>
-    <button 
-      class="tab" 
-      [class.active]="tabActiva === 'solicitudesTraslado'"
-      (click)="cambiarTab('solicitudesTraslado')">
-      Solicitudes Traslado ({{ solicitudesTraslado.length }})
+    <button class="tab" [class.active]="tabActiva === 'solicitudesTraslado'" (click)="cambiarTab('solicitudesTraslado')">
+      Solicitudes Traslado
     </button>
   </div>
 
   <div class="panel-content">
+    <!-- Loading -->
     <div *ngIf="cargando" class="loading">
       <div class="spinner"></div>
-      <p>Cargando datos...</p>
+      <p>Cargando registros...</p>
     </div>
 
-    <!-- Tab Cuidadores -->
+    <!-- Cuidadores -->
     <div *ngIf="!cargando && tabActiva === 'cuidadores'" class="tab-content">
-      <h2>Registros de Cuidadores</h2>
+      <div class="tab-header">
+        <h2>Registros de Cuidadores</h2>
+        <span class="record-count">{{ cuidadores.length }} registros</span>
+      </div>
       <div class="table-container" *ngIf="cuidadores.length > 0; else sinDatos">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Email</th>
               <th>Teléfono</th>
-              <th>Experiencia</th>
               <th>Zona</th>
+              <th>Horario</th>
               <th>Vehículo</th>
-              <th>Fecha Registro</th>
+              <th>Fecha</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cuidador of cuidadores">
-              <td>{{ cuidador.Id }}</td>
-              <td>{{ cuidador.Nombre }}</td>
-              <td>{{ cuidador.Email }}</td>
-              <td>{{ cuidador.Telefono }}</td>
-              <td class="text-truncate">{{ cuidador.Experiencia }}</td>
-              <td>{{ cuidador.ZonaCobertura }}</td>
+            <tr *ngFor="let c of cuidadores">
+              <td><strong>{{ c.Nombre }}</strong></td>
+              <td class="td-muted">{{ c.Email }}</td>
+              <td>{{ c.Telefono }}</td>
+              <td>{{ c.ZonaCobertura }}</td>
+              <td>{{ c.Horario }}</td>
               <td>
-                <span class="badge" [class.badge-success]="cuidador.Vehiculo" [class.badge-secondary]="!cuidador.Vehiculo">
-                  {{ cuidador.Vehiculo ? 'Sí' : 'No' }}
+                <span class="badge" [class.badge-success]="c.Vehiculo" [class.badge-secondary]="!c.Vehiculo">
+                  {{ c.Vehiculo ? 'Sí' : 'No' }}
                 </span>
               </td>
-              <td>{{ formatearFecha(cuidador.FechaEnvio) }}</td>
+              <td class="td-muted">{{ formatearFecha(c.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Tab Transportistas -->
+    <!-- Transportistas -->
     <div *ngIf="!cargando && tabActiva === 'transportistas'" class="tab-content">
-      <h2>Registros de Transportistas</h2>
+      <div class="tab-header">
+        <h2>Registros de Transportistas</h2>
+        <span class="record-count">{{ transportistas.length }} registros</span>
+      </div>
       <div class="table-container" *ngIf="transportistas.length > 0; else sinDatos">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Email</th>
               <th>Teléfono</th>
               <th>Zona</th>
               <th>Tipo Vehículo</th>
-              <th>Fecha Registro</th>
+              <th>Silla Ruedas</th>
+              <th>Fecha</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let transportista of transportistas">
-              <td>{{ transportista.Id }}</td>
-              <td>{{ transportista.Nombre }}</td>
-              <td>{{ transportista.Email }}</td>
-              <td>{{ transportista.Telefono }}</td>
-              <td>{{ transportista.ZonaCobertura }}</td>
+            <tr *ngFor="let t of transportistas">
+              <td><strong>{{ t.Nombre }}</strong></td>
+              <td class="td-muted">{{ t.Email }}</td>
+              <td>{{ t.Telefono }}</td>
+              <td>{{ t.ZonaCobertura }}</td>
+              <td><span class="badge badge-info">{{ t.TipoVehiculo }}</span></td>
               <td>
-                <span class="badge badge-info">{{ transportista.TipoVehiculo }}</span>
+                <span class="badge" [class.badge-success]="t.AceptaSillaDeRuedas" [class.badge-secondary]="!t.AceptaSillaDeRuedas">
+                  {{ t.AceptaSillaDeRuedas ? 'Sí' : 'No' }}
+                </span>
               </td>
-              <td>{{ formatearFecha(transportista.FechaEnvio) }}</td>
+              <td class="td-muted">{{ formatearFecha(t.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Tab Solicitudes Cuidado -->
+    <!-- Solicitudes Cuidado -->
     <div *ngIf="!cargando && tabActiva === 'solicitudesCuidado'" class="tab-content">
-      <h2>Solicitudes de Cuidado</h2>
+      <div class="tab-header">
+        <h2>Solicitudes de Cuidado</h2>
+        <span class="record-count">{{ solicitudesCuidado.length }} solicitudes</span>
+      </div>
       <div class="table-container" *ngIf="solicitudesCuidado.length > 0; else sinDatos">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Solicitante</th>
               <th>Email</th>
               <th>Teléfono</th>
               <th>Adulto Mayor</th>
-              <th>Descripción</th>
               <th>Zona</th>
-              <th>Fecha Solicitud</th>
+              <th>Descripción</th>
+              <th>Fecha</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let solicitud of solicitudesCuidado">
-              <td>{{ solicitud.Id }}</td>
-              <td>{{ solicitud.Nombre }}</td>
-              <td>{{ solicitud.Email }}</td>
-              <td>{{ solicitud.Telefono }}</td>
-              <td>{{ solicitud.NombreFamiliar }}</td>
-              <td class="text-truncate">{{ solicitud.Descripcion }}</td>
-              <td>{{ solicitud.Zona }}</td>
-              <td>{{ formatearFecha(solicitud.FechaEnvio) }}</td>
+            <tr *ngFor="let s of solicitudesCuidado">
+              <td><strong>{{ s.Nombre }}</strong></td>
+              <td class="td-muted">{{ s.Email }}</td>
+              <td>{{ s.Telefono }}</td>
+              <td>{{ s.NombreFamiliar }}</td>
+              <td>{{ s.Zona }}</td>
+              <td class="text-truncate">{{ s.Descripcion }}</td>
+              <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Tab Solicitudes Traslado -->
+    <!-- Solicitudes Traslado -->
     <div *ngIf="!cargando && tabActiva === 'solicitudesTraslado'" class="tab-content">
-      <h2>Solicitudes de Traslado</h2>
+      <div class="tab-header">
+        <h2>Solicitudes de Traslado</h2>
+        <span class="record-count">{{ solicitudesTraslado.length }} solicitudes</span>
+      </div>
       <div class="table-container" *ngIf="solicitudesTraslado.length > 0; else sinDatos">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Solicitante</th>
               <th>Email</th>
               <th>Teléfono</th>
               <th>Adulto Mayor</th>
               <th>Origen</th>
               <th>Destino</th>
-              <th>Fecha/Hora Traslado</th>
+              <th>Fecha Traslado</th>
               <th>Fecha Solicitud</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let solicitud of solicitudesTraslado">
-              <td>{{ solicitud.Id }}</td>
-              <td>{{ solicitud.Nombre }}</td>
-              <td>{{ solicitud.Email }}</td>
-              <td>{{ solicitud.Telefono }}</td>
-              <td>{{ solicitud.NombreFamiliar }}</td>
-              <td>{{ solicitud.Origen }}</td>
-              <td>{{ solicitud.Destino }}</td>
-              <td>
-                <span class="badge badge-warning">{{ formatearFecha(solicitud.FechaHora) }}</span>
-              </td>
-              <td>{{ formatearFecha(solicitud.FechaEnvio) }}</td>
+            <tr *ngFor="let s of solicitudesTraslado">
+              <td><strong>{{ s.Nombre }}</strong></td>
+              <td class="td-muted">{{ s.Email }}</td>
+              <td>{{ s.Telefono }}</td>
+              <td>{{ s.NombreFamiliar }}</td>
+              <td>{{ s.Origen }}</td>
+              <td>{{ s.Destino }}</td>
+              <td><span class="badge badge-warning">{{ formatearFecha(s.FechaHora) }}</span></td>
+              <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
@@ -188,9 +218,10 @@
 
     <ng-template #sinDatos>
       <div class="sin-datos">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
         </svg>
         <p>No hay registros disponibles</p>
       </div>

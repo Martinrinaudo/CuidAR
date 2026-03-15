@@ -8,91 +8,132 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   styleUrl: './home.component.css',
   template: `
-    <div class="home-container">
-      <div class="hero-section">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a class="navbar-brand" routerLink="/">
+          <img src="assets/logo.png" alt="CuidAR Logo">
+          <span>CuidAR</span>
+        </a>
+        <div class="navbar-actions">
+          <a routerLink="/admin/login" class="btn btn-outline" style="font-size:.85rem;padding:.5rem 1.2rem">Panel Admin</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content">
         <img src="assets/logo.png" alt="CuidAR Logo" class="hero-logo">
-        <h1>Bienvenido a CuidAR</h1>
-        <p class="subtitle">Conectamos cuidadores profesionales y transportistas con familias que necesitan servicios de calidad para adultos mayores</p>
+        <h1>Bienvenido a <span style="color:#6ee7b7">CuidAR</span></h1>
+        <p class="hero-subtitle">
+          Conectamos cuidadores profesionales y transportistas con familias
+          que necesitan servicios de calidad para adultos mayores
+        </p>
+      </div>
+      <div class="hero-wave">
+        <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:80px">
+          <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f8fafc"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Servicios -->
+    <section class="cards-section">
+      <div class="section-label">
+        <h2>¿Qué necesitás?</h2>
+        <p>Elegí la opción que mejor se adapta a tu situación</p>
       </div>
 
-      <div class="cards-section">
-        <div class="card card-cuidador">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <polyline points="17 11 19 13 23 9"></polyline>
+      <div class="cards-grid">
+        <div class="service-card card-green">
+          <div class="card-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <polyline points="17 11 19 13 23 9"/>
             </svg>
           </div>
-          <h2>Quiero ser cuidador</h2>
+          <h3>Quiero ser cuidador</h3>
           <p>Únete a nuestra red de profesionales y ayuda a familias en tu zona</p>
           <a routerLink="/formularios/cuidador" class="btn btn-primary">Registrarme</a>
         </div>
 
-        <div class="card card-transportista">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        <div class="service-card card-amber">
+          <div class="card-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
             </svg>
           </div>
-          <h2>Quiero ser transportista</h2>
-          <p>Ofrece servicios de transporte seguro para adultos mayores</p>
+          <h3>Quiero ser transportista</h3>
+          <p>Ofrecé servicios de traslado seguro y accesible para adultos mayores</p>
           <a routerLink="/formularios/transportista" class="btn btn-secondary">Registrarme</a>
         </div>
 
-        <div class="card card-solicitud-cuidado">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        <div class="service-card card-indigo">
+          <div class="card-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
           </div>
-          <h2>Necesito una cuidadora</h2>
-          <p>Solicita una cuidadora profesional para tu familiar</p>
-          <a routerLink="/formularios/solicitud-cuidado" class="btn btn-purple">Solicitar</a>
+          <h3>Necesito una cuidadora</h3>
+          <p>Solicitá una cuidadora profesional para tu familiar adulto mayor</p>
+          <a routerLink="/formularios/solicitud-cuidado" class="btn btn-indigo">Solicitar</a>
         </div>
 
-        <div class="card card-solicitud-traslado">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="2" x2="12" y2="22"></line>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        <div class="service-card card-rose">
+          <div class="card-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
-          <h2>Necesito un traslado</h2>
-          <p>Organiza un traslado seguro para tu familiar</p>
-          <a routerLink="/formularios/solicitud-traslado" class="btn btn-pink">Solicitar</a>
+          <h3>Necesito un traslado</h3>
+          <p>Organizá un traslado seguro y cómodo para tu familiar</p>
+          <a routerLink="/formularios/solicitud-traslado" class="btn btn-rose">Solicitar</a>
         </div>
       </div>
+    </section>
 
-      <div class="admin-link">
-        <a routerLink="/admin/login">Acceso administrador →</a>
-      </div>
-
-      <div class="info-section">
+    <!-- Por qué elegirnos -->
+    <section class="why-section">
+      <div class="why-inner">
         <h2>¿Por qué elegir CuidAR?</h2>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-icon">✓</span>
+        <div class="why-grid">
+          <div class="why-item">
+            <div class="why-icon">✓</div>
             <p>Profesionales verificados</p>
           </div>
-          <div class="info-item">
-            <span class="info-icon">✓</span>
+          <div class="why-item">
+            <div class="why-icon">❤</div>
             <p>Atención personalizada</p>
           </div>
-          <div class="info-item">
-            <span class="info-icon">✓</span>
+          <div class="why-item">
+            <div class="why-icon">⚡</div>
             <p>Sistema fácil y rápido</p>
           </div>
-          <div class="info-item">
-            <span class="info-icon">✓</span>
+          <div class="why-item">
+            <div class="why-icon">📍</div>
             <p>Cobertura regional</p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p>© 2025 <strong>CuidAR</strong> · Cuidado de adultos mayores en Argentina</p>
+      <div class="admin-link-footer">
+        <a routerLink="/admin/login">Acceso administrador →</a>
+      </div>
+    </footer>
   `
 })
 export class HomeComponent { }
