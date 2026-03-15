@@ -3,21 +3,25 @@
     <div class="navbar-brand">
       <a routerLink="/" class="brand-logo">
         <img src="assets/logo.png" alt="CuidAR" class="logo">
+        <span class="brand-name">CuidAR</span>
       </a>
     </div>
-
     <div class="navbar-menu">
       <ng-container *ngIf="!isAdminLoggedIn">
-        <!-- Usuario público -->
-        <a routerLink="/" class="nav-link">Inicio</a>
+        <a routerLink="/admin/login" class="btn-admin">Panel Admin</a>
       </ng-container>
-
       <ng-container *ngIf="isAdminLoggedIn">
-        <!-- Admin logueado -->
-        <a routerLink="/admin/panel" class="nav-link">Panel Admin</a>
-        <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+        <a routerLink="/admin/panel" class="nav-link">Panel</a>
+        <button class="btn-logout" (click)="logout()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Cerrar Sesión
+        </button>
       </ng-container>
     </div>
   </div>
 </nav>
-

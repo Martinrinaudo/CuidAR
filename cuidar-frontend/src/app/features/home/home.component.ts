@@ -8,19 +8,6 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   styleUrl: './home.component.css',
   template: `
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="navbar-inner">
-        <a class="navbar-brand" routerLink="/">
-          <img src="assets/logo.png" alt="CuidAR Logo">
-          <span>CuidAR</span>
-        </a>
-        <div class="navbar-actions">
-          <a routerLink="/admin/login" class="btn btn-outline" style="font-size:.85rem;padding:.5rem 1.2rem">Panel Admin</a>
-        </div>
-      </div>
-    </nav>
-
     <!-- Hero -->
     <section class="hero">
       <div class="hero-content">
