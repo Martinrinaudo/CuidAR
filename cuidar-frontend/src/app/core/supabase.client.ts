@@ -1,12 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
+import { environment } from '../../environments/environment';
 
 export const supabase = createClient(
-  'https://cvakzhgrnarlcvixhqzx.supabase.co',
-  'sb_publishable_oFJObocsinXhow22T99Ocg_lZvTrKeq',
+  environment.supabaseUrl,
+  environment.supabaseAnonKey,
   {
     auth: {
       detectSessionInUrl: true,
-      flowType: 'implicit',
+      flowType: 'pkce',
       persistSession: true
     }
   }
