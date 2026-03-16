@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+
 :host {
   display: block;
   min-height: 100vh;
@@ -5,32 +7,35 @@
 
 .home-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #d4efe4 0%, #f5f8f7 220px, #eef2f0 100%);
+  font-family: 'Nunito Sans', sans-serif;
+  background: linear-gradient(180deg, #c6e6da 0%, #eef3f1 260px, #edf1ef 100%);
 }
 
 .hero {
   text-align: center;
-  padding: 46px 20px 24px;
+  padding: 48px 20px 22px;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2rem, 4.8vw, 3.55rem);
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.2rem, 4.9vw, 4.2rem);
   line-height: 1.1;
-  color: #221516;
+  color: #1a1011;
   font-weight: 800;
 }
 
 .hero p {
-  margin: 12px 0 0;
-  font-size: clamp(1rem, 2vw, 2rem);
+  margin: 14px 0 0;
+  font-size: clamp(1rem, 2vw, 2.05rem);
+  font-weight: 600;
   color: #1f1b1b;
 }
 
 .hero-divider {
   display: flex;
   justify-content: center;
-  padding-bottom: 14px;
+  padding: 0 0 26px;
 }
 
 .hero-divider svg {
@@ -59,16 +64,16 @@
 .action-card {
   display: flex;
   align-items: center;
-  min-height: 230px;
+  min-height: 280px;
   padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 14px 28px rgba(8, 24, 32, 0.14);
+  box-shadow: 0 12px 28px rgba(12, 34, 40, 0.18);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .action-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 34px rgba(8, 24, 32, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 18px 36px rgba(10, 28, 36, 0.23);
 }
 
 .card-icon {
@@ -83,92 +88,118 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
-  margin-left: 10px;
+  gap: 11px;
+  margin-left: 14px;
 }
 
 .card-content h2 {
   margin: 0;
+  font-family: 'Poppins', sans-serif;
   color: #ffffff;
   font-size: 24px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.12;
+  max-width: 280px;
 }
 
 .card-content p {
   margin: 0;
   color: rgba(255, 255, 255, 0.95);
   font-size: 14px;
-  font-weight: 400;
-  line-height: 1.45;
+  font-weight: 600;
+  line-height: 1.24;
+  max-width: 320px;
 }
 
 .card-content button {
-  margin-top: 8px;
+  margin-top: 10px;
   border: none;
   border-radius: 25px;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.2);
+  padding: 12px 26px;
+  background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .card-content button:hover {
   background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .card-caregiver {
-  background: linear-gradient(135deg, #0d5e43 0%, #0f7a55 100%);
+  background: linear-gradient(135deg, #0f6146 0%, #0e7654 100%);
 }
 
 .card-transporter {
-  background: linear-gradient(135deg, #d1a13f 0%, #e4bd66 100%);
+  background: linear-gradient(135deg, #d3a03e 0%, #e7c165 100%);
 }
 
 .card-request-care {
-  background: linear-gradient(135deg, #5f67aa 0%, #5966a0 100%);
+  background: linear-gradient(135deg, #5b63a7 0%, #59629d 100%);
 }
 
 .card-request-ride {
-  background: linear-gradient(135deg, #e67377 0%, #e6666a 100%);
+  background: linear-gradient(135deg, #e67478 0%, #e5676d 100%);
 }
 
 .card-transporter .card-content h2,
-.card-transporter .card-content p,
-.card-request-ride .card-content h2,
-.card-request-ride .card-content p {
+.card-transporter .card-content p {
   color: #241717;
 }
 
+.card-transporter .card-content h2,
+.card-request-ride .card-content h2 {
+  max-width: 330px;
+}
+
 .card-transporter .card-content button {
-  background: rgba(160, 105, 14, 0.85);
+  background: #b77e11;
 }
 
 .card-transporter .card-content button:hover {
-  background: rgba(138, 88, 11, 0.9);
+  background: #9b6908;
+}
+
+.card-caregiver .card-content button {
+  background: #2baa62;
+}
+
+.card-caregiver .card-content button:hover {
+  background: #259154;
+}
+
+.card-request-care .card-content button {
+  background: #6373c5;
+}
+
+.card-request-care .card-content button:hover {
+  background: #5262b0;
 }
 
 .card-request-ride .card-content button {
-  background: rgba(166, 59, 78, 0.85);
+  background: #be4358;
 }
 
 .card-request-ride .card-content button:hover {
-  background: rgba(146, 47, 65, 0.9);
+  background: #a6374a;
 }
 
 .benefits {
   width: min(1120px, calc(100% - 48px));
-  margin: 52px auto 0;
+  margin: 58px auto 0;
   padding-bottom: 44px;
 }
 
 .benefits h3 {
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   margin: 0;
-  font-size: clamp(1.65rem, 3vw, 2.1rem);
+  font-size: clamp(2rem, 3vw, 2.3rem);
+  font-weight: 800;
   color: #161212;
 }
 
@@ -187,23 +218,25 @@
 }
 
 .check {
-  width: 28px;
-  height: 28px;
+  width: 31px;
+  height: 31px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #0f6a4b;
+  background: #116f4f;
   color: #ffffff;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .benefit-item p {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 700;
   color: #1c1919;
   line-height: 1.25;
+  max-width: 130px;
 }
 
 @media (max-width: 768px) {
@@ -213,7 +246,7 @@
   }
 
   .hero {
-    padding: 34px 14px 18px;
+    padding: 34px 14px 16px;
   }
 
   .cards-grid {
@@ -222,7 +255,7 @@
 
   .action-card {
     min-height: auto;
-    padding: 24px;
+    padding: 24px 22px;
   }
 
   .card-icon {
@@ -257,7 +290,8 @@
   }
 
   .benefit-item p {
-    font-size: 16px;
+    font-size: 15px;
+    max-width: 100%;
   }
 }
 
@@ -271,6 +305,11 @@
   }
 
   .card-content p {
+    font-size: 13px;
+  }
+
+  .card-content button {
+    padding: 11px 20px;
     font-size: 13px;
   }
 }
