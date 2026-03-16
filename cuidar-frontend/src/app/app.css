@@ -1,10 +1,123 @@
-/* Estilos del componente principal de la aplicación */
 :host {
   display: block;
   min-height: 100vh;
 }
 
-/* Asegurar que el router-outlet tenga espacio apropiado */
-router-outlet ~ * {
-  display: block;
+.cards-page {
+  padding: 32px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  min-height: 240px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card-icon {
+  flex: 0 0 100px;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin-left: 10px;
+}
+
+.card-content h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card-content p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.card-content button {
+  margin-top: 8px;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.card-content button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.card-caregiver {
+  background: #2d5f4f;
+}
+
+.card-transporter {
+  background: #d4a356;
+}
+
+.card-request-care {
+  background: #5a5a8e;
+}
+
+.card-request-ride {
+  background: #d16b7a;
+}
+
+@media (max-width: 768px) {
+  .cards-page {
+    padding: 20px;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-card {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .card-icon {
+    flex-basis: 72px;
+    width: 72px;
+  }
+
+  .card-icon svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  .card-content h2 {
+    font-size: 22px;
+  }
 }
