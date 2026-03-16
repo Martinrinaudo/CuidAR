@@ -35,7 +35,7 @@ import { RouterLink } from '@angular/router';
       <div class="cards-grid">
 
         <!-- Cuidador -->
-        <a routerLink="/formularios/cuidador" class="big-card card-bg-green">
+        <a routerLink="/formularios/cuidador" class="big-card card-theme-green">
           <div class="big-card-icon">
             <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
               <!-- Cuidador (persona joven) -->
@@ -57,7 +57,7 @@ import { RouterLink } from '@angular/router';
         </a>
 
         <!-- Transportista -->
-        <a routerLink="/formularios/transportista" class="big-card card-bg-amber">
+        <a routerLink="/formularios/transportista" class="big-card card-theme-amber">
           <div class="big-card-icon">
             <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
               <!-- Van/Ambulancia con rampa -->
@@ -83,7 +83,7 @@ import { RouterLink } from '@angular/router';
         </a>
 
         <!-- Solicitud Cuidado -->
-        <a routerLink="/formularios/solicitud-cuidado" class="big-card card-bg-indigo">
+        <a routerLink="/formularios/solicitud-cuidado" class="big-card card-theme-indigo">
           <div class="big-card-icon">
             <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
               <!-- Persona mayor sentada -->
@@ -108,7 +108,7 @@ import { RouterLink } from '@angular/router';
         </a>
 
         <!-- Solicitud Traslado -->
-        <a routerLink="/formularios/solicitud-traslado" class="big-card card-bg-rose">
+        <a routerLink="/formularios/solicitud-traslado" class="big-card card-theme-rose">
           <div class="big-card-icon">
             <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
               <!-- Van accesible -->
