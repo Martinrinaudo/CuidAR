@@ -19,7 +19,11 @@ function createSupabaseSingleton(): SupabaseClient {
       flowType: 'pkce',
       persistSession: true,
       autoRefreshToken: true,
-      storageKey: 'cuidar-auth-token'
+      storageKey: 'cuidar-auth-token',
+      lock: async (_name: string, _acquireTimeout: number, fn: () => Promise<any>) => {
+        // Evita conflictos del Navigator LockManager en algunos navegadores/tabs.
+        return await fn();
+      }
     }
   });
 
