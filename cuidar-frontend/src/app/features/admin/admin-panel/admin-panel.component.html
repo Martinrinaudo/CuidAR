@@ -64,6 +64,21 @@
   </div>
 
   <div class="panel-content">
+    <div class="panel-tools" *ngIf="!cargando">
+      <div class="filter-group">
+        <label for="filtroEstado">Mostrar:</label>
+        <select id="filtroEstado" [value]="filtroEstado" (change)="filtroEstado = $any($event.target).value">
+          <option value="todas">Todas</option>
+          <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+
+      <div class="feedback" *ngIf="errorMensaje || exitoMensaje">
+        <p class="feedback-ok" *ngIf="exitoMensaje">{{ exitoMensaje }}</p>
+        <p class="feedback-error" *ngIf="errorMensaje">{{ errorMensaje }}</p>
+      </div>
+    </div>
+
     <!-- Loading -->
     <div *ngIf="cargando" class="loading">
       <div class="spinner"></div>
@@ -74,9 +89,9 @@
     <div *ngIf="!cargando && tabActiva === 'cuidadores'" class="tab-content">
       <div class="tab-header">
         <h2>Registros de Cuidadores</h2>
-        <span class="record-count">{{ cuidadores.length }} registros</span>
+        <span class="record-count">{{ getCantidadFiltrada('cuidadores') }} registros</span>
       </div>
-      <div class="table-container" *ngIf="cuidadores.length > 0; else sinDatos">
+      <div class="table-container" *ngIf="getCantidadFiltrada('cuidadores') > 0; else sinDatos">
         <table>
           <thead>
             <tr>
@@ -86,11 +101,13 @@
               <th>Zona</th>
               <th>Horario</th>
               <th>Vehículo</th>
+              <th>Estado</th>
               <th>Fecha</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let c of cuidadores">
+            <tr *ngFor="let c of getRegistrosFiltrados('cuidadores'); trackBy: trackByRegistro">
               <td><strong>{{ c.Nombre }}</strong></td>
               <td class="td-muted">{{ c.Email }}</td>
               <td>{{ c.Telefono }}</td>
@@ -101,7 +118,24 @@
                   {{ c.Vehiculo ? 'Sí' : 'No' }}
                 </span>
               </td>
+              <td>
+                <div class="estado-cell">
+                  <span class="estado-badge" [ngClass]="getEstadoClase(c.estado)">{{ getEstadoLabel(c.estado) }}</span>
+                  <select
+                    [class]="'estado-select ' + getEstadoClase(c.estado)"
+                    [value]="c.estado"
+                    [disabled]="procesando"
+                    (change)="cambiarEstado('cuidadores', c, $event)">
+                    <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+                  </select>
+                </div>
+              </td>
               <td class="td-muted">{{ formatearFecha(c.FechaEnvio) }}</td>
+              <td>
+                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('cuidadores', c)">
+                  🗑 Eliminar
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -112,9 +146,9 @@
     <div *ngIf="!cargando && tabActiva === 'transportistas'" class="tab-content">
       <div class="tab-header">
         <h2>Registros de Transportistas</h2>
-        <span class="record-count">{{ transportistas.length }} registros</span>
+        <span class="record-count">{{ getCantidadFiltrada('transportistas') }} registros</span>
       </div>
-      <div class="table-container" *ngIf="transportistas.length > 0; else sinDatos">
+      <div class="table-container" *ngIf="getCantidadFiltrada('transportistas') > 0; else sinDatos">
         <table>
           <thead>
             <tr>
@@ -124,11 +158,13 @@
               <th>Zona</th>
               <th>Tipo Vehículo</th>
               <th>Silla Ruedas</th>
+              <th>Estado</th>
               <th>Fecha</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let t of transportistas">
+            <tr *ngFor="let t of getRegistrosFiltrados('transportistas'); trackBy: trackByRegistro">
               <td><strong>{{ t.Nombre }}</strong></td>
               <td class="td-muted">{{ t.Email }}</td>
               <td>{{ t.Telefono }}</td>
@@ -139,7 +175,24 @@
                   {{ t.AceptaSillaDeRuedas ? 'Sí' : 'No' }}
                 </span>
               </td>
+              <td>
+                <div class="estado-cell">
+                  <span class="estado-badge" [ngClass]="getEstadoClase(t.estado)">{{ getEstadoLabel(t.estado) }}</span>
+                  <select
+                    [class]="'estado-select ' + getEstadoClase(t.estado)"
+                    [value]="t.estado"
+                    [disabled]="procesando"
+                    (change)="cambiarEstado('transportistas', t, $event)">
+                    <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+                  </select>
+                </div>
+              </td>
               <td class="td-muted">{{ formatearFecha(t.FechaEnvio) }}</td>
+              <td>
+                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('transportistas', t)">
+                  🗑 Eliminar
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -150,9 +203,9 @@
     <div *ngIf="!cargando && tabActiva === 'solicitudesCuidado'" class="tab-content">
       <div class="tab-header">
         <h2>Solicitudes de Cuidado</h2>
-        <span class="record-count">{{ solicitudesCuidado.length }} solicitudes</span>
+        <span class="record-count">{{ getCantidadFiltrada('solicitudesCuidado') }} solicitudes</span>
       </div>
-      <div class="table-container" *ngIf="solicitudesCuidado.length > 0; else sinDatos">
+      <div class="table-container" *ngIf="getCantidadFiltrada('solicitudesCuidado') > 0; else sinDatos">
         <table>
           <thead>
             <tr>
@@ -162,18 +215,37 @@
               <th>Adulto Mayor</th>
               <th>Zona</th>
               <th>Descripción</th>
+              <th>Estado</th>
               <th>Fecha</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let s of solicitudesCuidado">
+            <tr *ngFor="let s of getRegistrosFiltrados('solicitudesCuidado'); trackBy: trackByRegistro">
               <td><strong>{{ s.Nombre }}</strong></td>
               <td class="td-muted">{{ s.Email }}</td>
               <td>{{ s.Telefono }}</td>
               <td>{{ s.NombreFamiliar }}</td>
               <td>{{ s.Zona }}</td>
               <td class="text-truncate">{{ s.Descripcion }}</td>
+              <td>
+                <div class="estado-cell">
+                  <span class="estado-badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
+                  <select
+                    [class]="'estado-select ' + getEstadoClase(s.estado)"
+                    [value]="s.estado"
+                    [disabled]="procesando"
+                    (change)="cambiarEstado('solicitudesCuidado', s, $event)">
+                    <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+                  </select>
+                </div>
+              </td>
               <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
+              <td>
+                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesCuidado', s)">
+                  🗑 Eliminar
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -184,9 +256,9 @@
     <div *ngIf="!cargando && tabActiva === 'solicitudesTraslado'" class="tab-content">
       <div class="tab-header">
         <h2>Solicitudes de Traslado</h2>
-        <span class="record-count">{{ solicitudesTraslado.length }} solicitudes</span>
+        <span class="record-count">{{ getCantidadFiltrada('solicitudesTraslado') }} solicitudes</span>
       </div>
-      <div class="table-container" *ngIf="solicitudesTraslado.length > 0; else sinDatos">
+      <div class="table-container" *ngIf="getCantidadFiltrada('solicitudesTraslado') > 0; else sinDatos">
         <table>
           <thead>
             <tr>
@@ -197,11 +269,13 @@
               <th>Origen</th>
               <th>Destino</th>
               <th>Fecha Traslado</th>
+              <th>Estado</th>
               <th>Fecha Solicitud</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let s of solicitudesTraslado">
+            <tr *ngFor="let s of getRegistrosFiltrados('solicitudesTraslado'); trackBy: trackByRegistro">
               <td><strong>{{ s.Nombre }}</strong></td>
               <td class="td-muted">{{ s.Email }}</td>
               <td>{{ s.Telefono }}</td>
@@ -209,7 +283,24 @@
               <td>{{ s.Origen }}</td>
               <td>{{ s.Destino }}</td>
               <td><span class="badge badge-warning">{{ formatearFecha(s.FechaHora) }}</span></td>
+              <td>
+                <div class="estado-cell">
+                  <span class="estado-badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
+                  <select
+                    [class]="'estado-select ' + getEstadoClase(s.estado)"
+                    [value]="s.estado"
+                    [disabled]="procesando"
+                    (change)="cambiarEstado('solicitudesTraslado', s, $event)">
+                    <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+                  </select>
+                </div>
+              </td>
               <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
+              <td>
+                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesTraslado', s)">
+                  🗑 Eliminar
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>

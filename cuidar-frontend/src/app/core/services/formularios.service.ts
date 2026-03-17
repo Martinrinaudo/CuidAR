@@ -15,6 +15,7 @@ export class FormulariosService {
       Dias: data.dias,
       Referencias: data.referencias,
       Vehiculo: data.vehiculo,
+      estado: 'nueva',
       FechaEnvio: new Date().toISOString()
     });
     if (error) throw error;
@@ -30,6 +31,7 @@ export class FormulariosService {
       TipoVehiculo: data.tipoVehiculo,
       AceptaSillaDeRuedas: data.aceptaSillaDeRuedas,
       AceptaPagoParticular: data.aceptaPagoParticular,
+      estado: 'nueva',
       FechaEnvio: new Date().toISOString()
     });
     if (error) throw error;
@@ -44,6 +46,7 @@ export class FormulariosService {
       NombreFamiliar: data.nombreFamiliar,
       Descripcion: data.descripcion,
       Zona: data.zona,
+      estado: 'nueva',
       FechaEnvio: new Date().toISOString()
     });
     if (error) throw error;
@@ -59,6 +62,7 @@ export class FormulariosService {
       Origen: data.origen,
       Destino: data.destino,
       FechaHora: data.fechaHora,
+      estado: 'nueva',
       FechaEnvio: new Date().toISOString()
     });
     if (error) throw error;

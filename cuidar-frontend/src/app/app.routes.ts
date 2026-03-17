@@ -27,6 +27,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
   },
   {
+    path: 'admin',
+    redirectTo: 'admin/login',
+    pathMatch: 'full'
+  },
+  {
     path: 'admin/panel',
     canActivate: [adminGuard],
     loadComponent: () => import('./features/admin/admin-panel/admin-panel.component').then(m => m.AdminPanelComponent)

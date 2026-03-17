@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { supabase } from '../supabase.client';
 
+export type EstadoSolicitud = 'nueva' | 'vista' | 'en_proceso' | 'asignada' | 'cancelada';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -61,5 +63,23 @@ export class AdminService {
   async isLoggedIn(): Promise<boolean> {
     const { data: { session } } = await supabase.auth.getSession();
     return !!session;
+  }
+
+  async actualizarEstado(tableName: string, idField: string, idValue: number | string, estado: EstadoSolicitud): Promise<void> {
+    const { error } = await supabase
+      .from(tableName)
+      .update({ estado })
+      .eq(idField, idValue);
+
+    if (error) throw error;
+  }
+
+  async eliminarRegistro(tableName: string, idField: string, idValue: number | string): Promise<void> {
+    const { error } = await supabase
+      .from(tableName)
+      .delete()
+      .eq(idField, idValue);
+
+    if (error) throw error;
   }
 }
