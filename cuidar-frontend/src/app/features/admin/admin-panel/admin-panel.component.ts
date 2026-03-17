@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../../core/services/admin.service';
 
@@ -7,7 +7,8 @@ import { AdminService } from '../../../core/services/admin.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './admin-panel.component.html',
-  styleUrls: ['./admin-panel.component.css']
+  styleUrls: ['./admin-panel.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPanelComponent implements OnInit {
   private adminService = inject(AdminService);

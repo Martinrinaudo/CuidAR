@@ -1,59 +1,80 @@
-# CuidarFrontend
+# CuidAR - Plataforma de Cuidadores y Transportistas 🏥
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+CuidAR es una plataforma web moderna desarrollada en **Angular 17+** que conecta familias con cuidadores calificados y servicios de transporte médico seguro en Argentina.
 
-## Development server
+## 🚀 Tecnologías Usadas
+- **Frontend Framework:** Angular 17+ (Standalone Components)
+- **Backend as a Service (BaaS):** Supabase (Auth & Postgres Database)
+- **Hosting / Deployment:** Vercel
+- **Testing:** Vitest
 
-To start a local development server, run:
+## 📋 Requisitos Previos
+- Node.js (v18.x o superior)
+- npm (v9.x o superior)
+- Cuenta en Supabase
+- Angular CLI (`npm install -g @angular/cli`)
 
-```bash
-ng serve
+## ⚙️ Instalación y Desarrollo Local
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone <url-del-repositorio>
+   cd cuidar-frontend
+   ```
+
+2. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
+
+3. **Configuración de Variables de Entorno (Supabase):**
+   Debes actualizar los archivos de entorno con las credenciales de tu proyecto Supabase.
+   
+   En `src/environments/environment.ts` y `src/environments/environment.prod.ts`:
+   ```typescript
+   export const environment = {
+     production: false, // true en environment.prod.ts
+     supabaseUrl: 'TU_SUPABASE_URL',
+     supabaseAnonKey: 'TU_SUPABASE_ANON_KEY'
+   };
+   ```
+
+4. **Levantar el servidor de desarrollo:**
+   ```bash
+   npm start
+   # o
+   ng serve
+   ```
+   Abre [http://localhost:4200/](http://localhost:4200/) en tu navegador.
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── app/
+│   ├── core/          # Servicios fundamentales, Guards e Interceptores
+│   ├── features/      # Módulos de la aplicación (Home, Formularios, Admin)
+│   └── shared/        # Componentes reutilizables (Navbar, Footer, Utilidades)
+├── assets/            # Imágenes, íconos y otros archivos estáticos
+└── environments/      # Variables de configuración por entorno
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🛡️ Seguridad y Buenas Prácticas
+- **ChangeDetectionStrategy.OnPush:** Optimización de renderizado en componentes.
+- **CSP & Security Headers:** Implementado en `vercel.json` para bloquear ataques XSS y Clickjacking.
+- **Supabase RLS:** Asegúrate de tener activado *Row Level Security* en tus tablas de Supabase en producción para proteger los datos.
 
-## Code scaffolding
+## 🛠️ Comandos Útiles
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Construir para producción:** `npm run build` o `ng build --configuration production`
+- **Ejecutar tests unitarios (Vitest):** `npm test`
+- **Auditar dependencias:** `npm audit`
 
-```bash
-ng generate component component-name
-```
+## ☁️ Deploy en Vercel
+1. Conecta tu cuenta de GitHub/GitLab a Vercel.
+2. Importa este repositorio.
+3. El framework preset de Vercel detectará automáticamente **Angular**.
+4. ¡Haz deploy! Vercel leerá el archivo `vercel.json` para configurar el routing y los headers de seguridad correspondientes automáticamente.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*Desarrollado para CuidAR.*

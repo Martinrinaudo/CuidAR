@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -9,7 +9,8 @@ import { FormulariosService } from '../../../core/services/formularios.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './cuidador.component.html',
-  styleUrls: ['./cuidador.component.css']
+  styleUrls: ['./cuidador.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CuidadorComponent {
   private fb = inject(FormBuilder);

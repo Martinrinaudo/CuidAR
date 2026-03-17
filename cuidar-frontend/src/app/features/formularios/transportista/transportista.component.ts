@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -9,7 +9,8 @@ import { FormulariosService } from '../../../core/services/formularios.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './transportista.component.html',
-  styleUrls: ['./transportista.component.css']
+  styleUrls: ['./transportista.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransportistaComponent {
   private fb = inject(FormBuilder);

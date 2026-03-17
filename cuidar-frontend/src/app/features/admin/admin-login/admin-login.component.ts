@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { supabase } from '../../../core/supabase.client';
@@ -8,7 +8,8 @@ import { supabase } from '../../../core/supabase.client';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './admin-login.component.html',
-  styleUrls: ['./admin-login.component.css']
+  styleUrls: ['./admin-login.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminLoginComponent implements OnInit {
   private router = inject(Router);
