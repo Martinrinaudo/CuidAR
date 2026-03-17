@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class WhatsappButtonComponent {
   // Formato WhatsApp Argentina: 549 + codigo de area + numero (sin +, sin 0 y sin 15)
-  @Input() phoneNumber: string = '5491123456789';
+  @Input() phoneNumber: string = '5493518066297';
   @Input() message: string = 'Hola, necesito asistencia urgente de CuidAR';
 
   get whatsappUrl(): string {

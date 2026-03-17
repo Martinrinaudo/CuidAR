@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { supabase } from '../supabase.client';
+import { SupabaseService } from './supabase.service';
 
 export type EstadoSolicitud = 'nueva' | 'vista' | 'en_proceso' | 'asignada' | 'cancelada';
 
@@ -8,10 +8,13 @@ export type EstadoSolicitud = 'nueva' | 'vista' | 'en_proceso' | 'asignada' | 'c
   providedIn: 'root'
 })
 export class AdminService {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private supabaseService: SupabaseService
+  ) {}
 
   async login(): Promise<void> {
-    await supabase.auth.signInWithOAuth({
+    await this.supabaseService.client.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: 'https://cuid-ar-blush.vercel.app/admin/login'
@@ -20,7 +23,7 @@ export class AdminService {
   }
 
   async getCuidadores() {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabaseService.client
       .from('RegistrosCuidadores')
       .select('*')
       .order('FechaEnvio', { ascending: false });
@@ -29,7 +32,7 @@ export class AdminService {
   }
 
   async getTransportistas() {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabaseService.client
       .from('RegistrosTransportistas')
       .select('*')
       .order('FechaEnvio', { ascending: false });
@@ -38,7 +41,7 @@ export class AdminService {
   }
 
   async getSolicitudesCuidado() {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabaseService.client
       .from('SolicitudesCuidado')
       .select('*')
       .order('FechaEnvio', { ascending: false });
@@ -47,7 +50,7 @@ export class AdminService {
   }
 
   async getSolicitudesTraslado() {
-    const { data, error } = await supabase
+    const { data, error } = await this.supabaseService.client
       .from('SolicitudesTraslado')
       .select('*')
       .order('FechaEnvio', { ascending: false });
@@ -56,17 +59,17 @@ export class AdminService {
   }
 
   async logout(): Promise<void> {
-    await supabase.auth.signOut();
+    await this.supabaseService.client.auth.signOut();
     this.router.navigate(['/admin/login']);
   }
 
   async isLoggedIn(): Promise<boolean> {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await this.supabaseService.safeGetSession();
     return !!session;
   }
 
   async actualizarEstado(tableName: string, idField: string, idValue: number | string, estado: EstadoSolicitud): Promise<void> {
-    const { error } = await supabase
+    const { error } = await this.supabaseService.client
       .from(tableName)
       .update({ estado })
       .eq(idField, idValue);
@@ -75,7 +78,7 @@ export class AdminService {
   }
 
   async eliminarRegistro(tableName: string, idField: string, idValue: number | string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await this.supabaseService.client
       .from(tableName)
       .delete()
       .eq(idField, idValue);

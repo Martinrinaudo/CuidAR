@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { supabase } from '../../../core/supabase.client';
+import { SupabaseService } from '../../../core/services/supabase.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -13,6 +13,7 @@ import { supabase } from '../../../core/supabase.client';
 })
 export class AdminLoginComponent implements OnInit {
   private router = inject(Router);
+  private supabaseService = inject(SupabaseService);
 
   error: string = '';
   mensajeExito: string = '';
@@ -23,7 +24,7 @@ export class AdminLoginComponent implements OnInit {
     const hash = window.location.hash;
     if (hash && hash.includes('access_token')) {
       try {
-        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        const { data: authListener } = this.supabaseService.client.auth.onAuthStateChange((event, session) => {
           if (event === 'SIGNED_IN' && session) {
             window.history.replaceState(null, '', window.location.pathname);
             authListener.subscription.unsubscribe();
@@ -39,7 +40,7 @@ export class AdminLoginComponent implements OnInit {
     }
 
     // If already logged in, redirect
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await this.supabaseService.safeGetSession();
     if (session) {
       this.router.navigate(['/admin/panel']);
     }
@@ -51,7 +52,7 @@ export class AdminLoginComponent implements OnInit {
     this.error = '';
 
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await this.supabaseService.client.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: 'https://cuid-ar-blush.vercel.app/admin/panel'

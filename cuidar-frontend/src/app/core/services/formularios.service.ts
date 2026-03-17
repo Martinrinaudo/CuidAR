@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { supabase } from '../supabase.client';
+import { SupabaseService } from './supabase.service';
 
 @Injectable({ providedIn: 'root' })
 export class FormulariosService {
+  constructor(private supabaseService: SupabaseService) {}
 
   async registrarCuidador(data: any) {
-    const { error } = await supabase.from('RegistrosCuidadores').insert({
+    const { error } = await this.supabaseService.client.from('RegistrosCuidadores').insert({
       Nombre: data.nombre,
       Email: data.email,
       Telefono: data.telefono,
@@ -23,7 +24,7 @@ export class FormulariosService {
   }
 
   async registrarTransportista(data: any) {
-    const { error } = await supabase.from('RegistrosTransportistas').insert({
+    const { error } = await this.supabaseService.client.from('RegistrosTransportistas').insert({
       Nombre: data.nombre,
       Email: data.email,
       Telefono: data.telefono,
@@ -39,7 +40,7 @@ export class FormulariosService {
   }
 
   async crearSolicitudCuidado(data: any) {
-    const { error } = await supabase.from('SolicitudesCuidado').insert({
+    const { error } = await this.supabaseService.client.from('SolicitudesCuidado').insert({
       Nombre: data.nombre,
       Email: data.email,
       Telefono: data.telefono,
@@ -54,7 +55,7 @@ export class FormulariosService {
   }
 
   async crearSolicitudTraslado(data: any) {
-    const { error } = await supabase.from('SolicitudesTraslado').insert({
+    const { error } = await this.supabaseService.client.from('SolicitudesTraslado').insert({
       Nombre: data.nombre,
       Email: data.email,
       Telefono: data.telefono,

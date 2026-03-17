@@ -1,14 +1,1 @@
-import { createClient } from '@supabase/supabase-js';
-import { environment } from '../../environments/environment';
-
-export const supabase = createClient(
-  environment.supabaseUrl,
-  environment.supabaseAnonKey,
-  {
-    auth: {
-      detectSessionInUrl: true,
-      flowType: 'pkce',
-      persistSession: true
-    }
-  }
-);
+export { supabase } from './services/supabase.service';
