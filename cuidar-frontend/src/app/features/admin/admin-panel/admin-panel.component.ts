@@ -83,18 +83,29 @@ export class AdminPanelComponent implements OnInit {
     this.cargando = true;
     
     try {
-      // Cargar todos los datos en paralelo
-      const [cuidadores, transportistas, solicitudesCuidado, solicitudesTraslado] = await Promise.all([
+      // Cargar todos los datos en paralelo sin bloquear todo el panel si una consulta falla.
+      const [cuidadoresRes, transportistasRes, solicitudesCuidadoRes, solicitudesTrasladoRes] = await Promise.allSettled([
         this.adminService.getCuidadores(),
         this.adminService.getTransportistas(),
         this.adminService.getSolicitudesCuidado(),
         this.adminService.getSolicitudesTraslado()
       ]);
 
-      this.cuidadores = cuidadores;
-      this.transportistas = transportistas;
-      this.solicitudesCuidado = solicitudesCuidado;
-      this.solicitudesTraslado = solicitudesTraslado;
+      this.cuidadores = cuidadoresRes.status === 'fulfilled' ? cuidadoresRes.value : [];
+      this.transportistas = transportistasRes.status === 'fulfilled' ? transportistasRes.value : [];
+      this.solicitudesCuidado = solicitudesCuidadoRes.status === 'fulfilled' ? solicitudesCuidadoRes.value : [];
+      this.solicitudesTraslado = solicitudesTrasladoRes.status === 'fulfilled' ? solicitudesTrasladoRes.value : [];
+
+      const erroresCarga = [
+        cuidadoresRes.status === 'rejected',
+        transportistasRes.status === 'rejected',
+        solicitudesCuidadoRes.status === 'rejected',
+        solicitudesTrasladoRes.status === 'rejected'
+      ].filter(Boolean).length;
+
+      if (erroresCarga > 0) {
+        this.errorMensaje = `Algunas listas no se pudieron cargar (${erroresCarga}/4). Reintenta en unos segundos.`;
+      }
 
       this.cuidadores = this.cuidadores.map((item) => ({ ...item, estado: this.normalizarEstado(item?.estado) }));
       this.transportistas = this.transportistas.map((item) => ({ ...item, estado: this.normalizarEstado(item?.estado) }));
@@ -193,10 +204,14 @@ export class AdminPanelComponent implements OnInit {
     }
   }
 
-  trackByRegistro(_: number, item: any): string | number {
-    const idData = this.obtenerIdRegistro(item);
-    return `${idData.idField}-${idData.idValue}`;
-  }
+  trackByRegistro = (index: number, item: any): string | number => {
+    const idValue = item?.Id ?? item?.id;
+    if (idValue !== undefined && idValue !== null) {
+      return idValue;
+    }
+
+    return `fallback-${index}`;
+  };
 
   private normalizarEstado(estado: string | null | undefined): EstadoSolicitud {
     const valor = (estado ?? 'nueva').toString().trim().toLowerCase();
