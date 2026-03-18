@@ -70,6 +70,19 @@ src/
 - **Ejecutar tests unitarios (Vitest):** `npm test`
 - **Auditar dependencias:** `npm audit`
 
+## 📈 Operación en Producción
+
+Documentación operativa:
+- `../docs/ops/PRODUCTION_RUNBOOK.md`
+- `../docs/ops/RELEASE_CHECKLIST.md`
+- `../docs/ops/INCIDENT_RESPONSE.md`
+
+Smoke test post-deploy (desde la raíz del repo):
+
+```powershell
+./scripts/smoke-test.ps1 -FrontendUrl "https://<tu-dominio-vercel>" -SupabaseProjectUrl "https://<tu-project-ref>.supabase.co" -AllowedOrigin "https://<tu-dominio-vercel>"
+```
+
 ## ☁️ Deploy en Vercel
 1. Conecta tu cuenta de GitHub/GitLab a Vercel.
 2. Importa este repositorio.

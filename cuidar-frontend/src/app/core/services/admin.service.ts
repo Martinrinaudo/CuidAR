@@ -4,6 +4,13 @@ import { SupabaseService } from './supabase.service';
 
 export type EstadoSolicitud = 'nueva' | 'vista' | 'en_proceso' | 'asignada' | 'cancelada';
 
+export interface AdminPagedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,40 +29,20 @@ export class AdminService {
     });
   }
 
-  async getCuidadores() {
-    const { data, error } = await this.supabaseService.client
-      .from('RegistrosCuidadores')
-      .select('*')
-      .order('FechaEnvio', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getCuidadores(page: number = 1, pageSize: number = 25): Promise<AdminPagedResult<any>> {
+    return this.getPagedFromTable('RegistrosCuidadores', page, pageSize);
   }
 
-  async getTransportistas() {
-    const { data, error } = await this.supabaseService.client
-      .from('RegistrosTransportistas')
-      .select('*')
-      .order('FechaEnvio', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getTransportistas(page: number = 1, pageSize: number = 25): Promise<AdminPagedResult<any>> {
+    return this.getPagedFromTable('RegistrosTransportistas', page, pageSize);
   }
 
-  async getSolicitudesCuidado() {
-    const { data, error } = await this.supabaseService.client
-      .from('SolicitudesCuidado')
-      .select('*')
-      .order('FechaEnvio', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getSolicitudesCuidado(page: number = 1, pageSize: number = 25): Promise<AdminPagedResult<any>> {
+    return this.getPagedFromTable('SolicitudesCuidado', page, pageSize);
   }
 
-  async getSolicitudesTraslado() {
-    const { data, error } = await this.supabaseService.client
-      .from('SolicitudesTraslado')
-      .select('*')
-      .order('FechaEnvio', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getSolicitudesTraslado(page: number = 1, pageSize: number = 25): Promise<AdminPagedResult<any>> {
+    return this.getPagedFromTable('SolicitudesTraslado', page, pageSize);
   }
 
   async logout(): Promise<void> {
@@ -84,5 +71,27 @@ export class AdminService {
       .eq(idField, idValue);
 
     if (error) throw error;
+  }
+
+  private async getPagedFromTable(tableName: string, page: number, pageSize: number): Promise<AdminPagedResult<any>> {
+    const safePage = Math.max(1, Math.floor(page));
+    const safePageSize = Math.max(1, Math.floor(pageSize));
+    const from = (safePage - 1) * safePageSize;
+    const to = from + safePageSize - 1;
+
+    const { data, error, count } = await this.supabaseService.client
+      .from(tableName)
+      .select('*', { count: 'exact' })
+      .order('FechaEnvio', { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+
+    return {
+      data: data || [],
+      total: count ?? 0,
+      page: safePage,
+      pageSize: safePageSize
+    };
   }
 }

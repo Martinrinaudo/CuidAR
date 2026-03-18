@@ -28,22 +28,60 @@
 3. En **Site URL**, configura:
    - `https://cuid-ar-blush.vercel.app`
 
-### 3. Administradores autorizados
+### 3. Administradores autorizados y CORS (Edge Functions)
 
-Los emails autorizados para acceder al panel admin están configurados en:
-- **Backend**: `supabase/functions/admin/index.ts` - líneas 10-13
-- Por defecto, solo estos emails tienen acceso:
-  - martinrinaudo03@gmail.com
-  - beatrizaraya123@gmail.com
+La autorización del panel admin ahora se configura por variables de entorno en Supabase (no hardcodeada en código):
 
-Para agregar más administradores, edita el array `AUTHORIZED_ADMIN_EMAILS` en el archivo de la Edge Function.
+- `ADMIN_EMAILS`: emails admin separados por coma.
+   - Ejemplo: `martinrinaudo03@gmail.com,beatrizaraya123@gmail.com`
+- `ALLOWED_ORIGINS`: orígenes permitidos separados por coma.
+   - Ejemplo: `https://cuid-ar-blush.vercel.app,http://localhost:4200`
 
-### 4. Desplegar Edge Function (si hay cambios)
+Si estas variables no están configuradas, la función responderá error de configuración.
 
-Si modificas la lista de administradores, necesitas redesplegar la Edge Function:
+### 4. Configurar secrets y desplegar Edge Functions
+
+Configura los secrets en Supabase (una sola vez o cuando cambien):
+
+```bash
+supabase secrets set ADMIN_EMAILS="martinrinaudo03@gmail.com,beatrizaraya123@gmail.com"
+supabase secrets set ALLOWED_ORIGINS="https://cuid-ar-blush.vercel.app,http://localhost:4200"
+```
+
+Luego despliega funciones:
+
+Si modificas administradores u orígenes, debes volver a desplegar:
 
 ```bash
 supabase functions deploy admin
+supabase functions deploy formularios
+```
+
+### 5. Aplicar políticas RLS (obligatorio para producción)
+
+Se agregó una migración de seguridad en:
+
+- `supabase/migrations/20260318_security_rls.sql`
+
+Aplica la migración:
+
+```bash
+supabase db push
+```
+
+La migración hace lo siguiente:
+
+- Crea `public.admin_users`
+- Activa RLS en tablas de formularios
+- Permite solo inserts públicos necesarios
+- Restringe select/update/delete a admins autenticados
+- Inserta admins iniciales (idempotente)
+
+Si quieres agregar un admin nuevo:
+
+```sql
+insert into public.admin_users (email) values ('nuevoadmin@dominio.com')
+on conflict (email) do nothing;
 ```
 
 ## Desarrollo local

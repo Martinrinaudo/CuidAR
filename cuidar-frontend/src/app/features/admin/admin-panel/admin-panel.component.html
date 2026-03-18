@@ -27,22 +27,22 @@
       <div class="stat-chip">
         <span class="stat-dot stat-dot-green"></span>
         <span class="stat-label">Cuidadores</span>
-        <span class="stat-count">{{ cuidadores.length }}</span>
+        <span class="stat-count">{{ getTotalRegistros('cuidadores') }}</span>
       </div>
       <div class="stat-chip">
         <span class="stat-dot stat-dot-amber"></span>
         <span class="stat-label">Transportistas</span>
-        <span class="stat-count">{{ transportistas.length }}</span>
+        <span class="stat-count">{{ getTotalRegistros('transportistas') }}</span>
       </div>
       <div class="stat-chip">
         <span class="stat-dot stat-dot-indigo"></span>
         <span class="stat-label">Sol. Cuidado</span>
-        <span class="stat-count">{{ solicitudesCuidado.length }}</span>
+        <span class="stat-count">{{ getTotalRegistros('solicitudesCuidado') }}</span>
       </div>
       <div class="stat-chip">
         <span class="stat-dot stat-dot-rose"></span>
         <span class="stat-label">Sol. Traslado</span>
-        <span class="stat-count">{{ solicitudesTraslado.length }}</span>
+        <span class="stat-count">{{ getTotalRegistros('solicitudesTraslado') }}</span>
       </div>
     </div>
   </div>
@@ -89,7 +89,7 @@
     <div *ngIf="!cargando && tabActiva === 'cuidadores'" class="tab-content">
       <div class="tab-header">
         <h2>Registros de Cuidadores</h2>
-        <span class="record-count">{{ getCantidadFiltrada('cuidadores') }} registros</span>
+        <span class="record-count">{{ getTotalRegistros('cuidadores') }} registros totales</span>
       </div>
       <div class="table-container" *ngIf="getCantidadFiltrada('cuidadores') > 0; else sinDatos">
         <table>
@@ -140,13 +140,22 @@
           </tbody>
         </table>
       </div>
+      <div class="panel-tools" *ngIf="getTotalRegistros('cuidadores') > 0">
+        <button class="tab" [disabled]="!puedeIrPaginaAnterior('cuidadores')" (click)="irPaginaAnterior('cuidadores')">
+          Anterior
+        </button>
+        <span class="record-count">Página {{ getPaginaActual('cuidadores') }} de {{ getTotalPaginas('cuidadores') }}</span>
+        <button class="tab" [disabled]="!puedeIrPaginaSiguiente('cuidadores')" (click)="irPaginaSiguiente('cuidadores')">
+          Siguiente
+        </button>
+      </div>
     </div>
 
     <!-- Transportistas -->
     <div *ngIf="!cargando && tabActiva === 'transportistas'" class="tab-content">
       <div class="tab-header">
         <h2>Registros de Transportistas</h2>
-        <span class="record-count">{{ getCantidadFiltrada('transportistas') }} registros</span>
+        <span class="record-count">{{ getTotalRegistros('transportistas') }} registros totales</span>
       </div>
       <div class="table-container" *ngIf="getCantidadFiltrada('transportistas') > 0; else sinDatos">
         <table>
@@ -197,13 +206,22 @@
           </tbody>
         </table>
       </div>
+      <div class="panel-tools" *ngIf="getTotalRegistros('transportistas') > 0">
+        <button class="tab" [disabled]="!puedeIrPaginaAnterior('transportistas')" (click)="irPaginaAnterior('transportistas')">
+          Anterior
+        </button>
+        <span class="record-count">Página {{ getPaginaActual('transportistas') }} de {{ getTotalPaginas('transportistas') }}</span>
+        <button class="tab" [disabled]="!puedeIrPaginaSiguiente('transportistas')" (click)="irPaginaSiguiente('transportistas')">
+          Siguiente
+        </button>
+      </div>
     </div>
 
     <!-- Solicitudes Cuidado -->
     <div *ngIf="!cargando && tabActiva === 'solicitudesCuidado'" class="tab-content">
       <div class="tab-header">
         <h2>Solicitudes de Cuidado</h2>
-        <span class="record-count">{{ getCantidadFiltrada('solicitudesCuidado') }} solicitudes</span>
+        <span class="record-count">{{ getTotalRegistros('solicitudesCuidado') }} solicitudes totales</span>
       </div>
       <div class="table-container" *ngIf="getCantidadFiltrada('solicitudesCuidado') > 0; else sinDatos">
         <table>
@@ -250,13 +268,22 @@
           </tbody>
         </table>
       </div>
+      <div class="panel-tools" *ngIf="getTotalRegistros('solicitudesCuidado') > 0">
+        <button class="tab" [disabled]="!puedeIrPaginaAnterior('solicitudesCuidado')" (click)="irPaginaAnterior('solicitudesCuidado')">
+          Anterior
+        </button>
+        <span class="record-count">Página {{ getPaginaActual('solicitudesCuidado') }} de {{ getTotalPaginas('solicitudesCuidado') }}</span>
+        <button class="tab" [disabled]="!puedeIrPaginaSiguiente('solicitudesCuidado')" (click)="irPaginaSiguiente('solicitudesCuidado')">
+          Siguiente
+        </button>
+      </div>
     </div>
 
     <!-- Solicitudes Traslado -->
     <div *ngIf="!cargando && tabActiva === 'solicitudesTraslado'" class="tab-content">
       <div class="tab-header">
         <h2>Solicitudes de Traslado</h2>
-        <span class="record-count">{{ getCantidadFiltrada('solicitudesTraslado') }} solicitudes</span>
+        <span class="record-count">{{ getTotalRegistros('solicitudesTraslado') }} solicitudes totales</span>
       </div>
       <div class="table-container" *ngIf="getCantidadFiltrada('solicitudesTraslado') > 0; else sinDatos">
         <table>
@@ -304,6 +331,15 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="panel-tools" *ngIf="getTotalRegistros('solicitudesTraslado') > 0">
+        <button class="tab" [disabled]="!puedeIrPaginaAnterior('solicitudesTraslado')" (click)="irPaginaAnterior('solicitudesTraslado')">
+          Anterior
+        </button>
+        <span class="record-count">Página {{ getPaginaActual('solicitudesTraslado') }} de {{ getTotalPaginas('solicitudesTraslado') }}</span>
+        <button class="tab" [disabled]="!puedeIrPaginaSiguiente('solicitudesTraslado')" (click)="irPaginaSiguiente('solicitudesTraslado')">
+          Siguiente
+        </button>
       </div>
     </div>
 

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminService, EstadoSolicitud } from '../../../core/services/admin.service';
+import { AdminService, AdminPagedResult, EstadoSolicitud } from '../../../core/services/admin.service';
 
 type TabAdmin = 'cuidadores' | 'transportistas' | 'solicitudesCuidado' | 'solicitudesTraslado';
 
@@ -15,6 +15,13 @@ interface TablaConfig {
   labelSingular: string;
 }
 
+interface PaginacionTab {
+  page: number;
+  total: number;
+  loaded: boolean;
+  loading: boolean;
+}
+
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
@@ -26,6 +33,7 @@ interface TablaConfig {
 export class AdminPanelComponent implements OnInit {
   private adminService = inject(AdminService);
   private cdr = inject(ChangeDetectorRef);
+  private readonly PAGE_SIZE = 25;
 
   tabActiva: TabAdmin = 'cuidadores';
   cargando: boolean = false;
@@ -38,6 +46,13 @@ export class AdminPanelComponent implements OnInit {
   transportistas: any[] = [];
   solicitudesCuidado: any[] = [];
   solicitudesTraslado: any[] = [];
+
+  private readonly paginacionMap: Record<TabAdmin, PaginacionTab> = {
+    cuidadores: { page: 1, total: 0, loaded: false, loading: false },
+    transportistas: { page: 1, total: 0, loaded: false, loading: false },
+    solicitudesCuidado: { page: 1, total: 0, loaded: false, loading: false },
+    solicitudesTraslado: { page: 1, total: 0, loaded: false, loading: false }
+  };
 
   readonly estadoOptions: EstadoOption[] = [
     { value: 'nueva', label: 'Nueva' },
@@ -78,48 +93,17 @@ export class AdminPanelComponent implements OnInit {
     this.tabActiva = tab;
     this.filtroEstado = 'todas';
     this.limpiarMensajes();
+
+    if (!this.paginacionMap[tab].loaded) {
+      void this.cargarTab(tab, 1);
+      return;
+    }
+
     this.cdr.detectChanges();
   }
 
   async cargarDatos(): Promise<void> {
-    this.cargando = true;
-    
-    try {
-      // Cargar todos los datos en paralelo sin bloquear todo el panel si una consulta falla.
-      const [cuidadoresRes, transportistasRes, solicitudesCuidadoRes, solicitudesTrasladoRes] = await Promise.allSettled([
-        this.adminService.getCuidadores(),
-        this.adminService.getTransportistas(),
-        this.adminService.getSolicitudesCuidado(),
-        this.adminService.getSolicitudesTraslado()
-      ]);
-
-      this.cuidadores = cuidadoresRes.status === 'fulfilled' ? cuidadoresRes.value : [];
-      this.transportistas = transportistasRes.status === 'fulfilled' ? transportistasRes.value : [];
-      this.solicitudesCuidado = solicitudesCuidadoRes.status === 'fulfilled' ? solicitudesCuidadoRes.value : [];
-      this.solicitudesTraslado = solicitudesTrasladoRes.status === 'fulfilled' ? solicitudesTrasladoRes.value : [];
-
-      const erroresCarga = [
-        cuidadoresRes.status === 'rejected',
-        transportistasRes.status === 'rejected',
-        solicitudesCuidadoRes.status === 'rejected',
-        solicitudesTrasladoRes.status === 'rejected'
-      ].filter(Boolean).length;
-
-      if (erroresCarga > 0) {
-        this.errorMensaje = `Algunas listas no se pudieron cargar (${erroresCarga}/4). Reintenta en unos segundos.`;
-      }
-
-      this.cuidadores = this.cuidadores.map((item) => ({ ...item, estado: this.normalizarEstado(item?.estado) }));
-      this.transportistas = this.transportistas.map((item) => ({ ...item, estado: this.normalizarEstado(item?.estado) }));
-      this.solicitudesCuidado = this.solicitudesCuidado.map((item) => ({ ...item, estado: this.normalizarEstado(item?.estado) }));
-      this.solicitudesTraslado = this.solicitudesTraslado.map((item) => ({ ...item, estado: this.normalizarEstado(item?.estado) }));
-    } catch (err) {
-      console.error('Error al cargar datos:', err);
-      this.errorMensaje = 'No se pudieron cargar los registros del panel.';
-    } finally {
-      this.cargando = false;
-      this.cdr.detectChanges();
-    }
+    await this.cargarTab(this.tabActiva, 1);
   }
 
   async cerrarSesion(): Promise<void> {
@@ -157,6 +141,43 @@ export class AdminPanelComponent implements OnInit {
 
   getCantidadFiltrada(tab: TabAdmin): number {
     return this.getRegistrosFiltrados(tab).length;
+  }
+
+  getTotalRegistros(tab: TabAdmin): number {
+    return this.paginacionMap[tab].total;
+  }
+
+  getPaginaActual(tab: TabAdmin): number {
+    return this.paginacionMap[tab].page;
+  }
+
+  getTotalPaginas(tab: TabAdmin): number {
+    const total = this.paginacionMap[tab].total;
+    return Math.max(1, Math.ceil(total / this.PAGE_SIZE));
+  }
+
+  puedeIrPaginaAnterior(tab: TabAdmin): boolean {
+    return !this.paginacionMap[tab].loading && this.getPaginaActual(tab) > 1;
+  }
+
+  puedeIrPaginaSiguiente(tab: TabAdmin): boolean {
+    return !this.paginacionMap[tab].loading && this.getPaginaActual(tab) < this.getTotalPaginas(tab);
+  }
+
+  async irPaginaAnterior(tab: TabAdmin): Promise<void> {
+    if (!this.puedeIrPaginaAnterior(tab)) {
+      return;
+    }
+
+    await this.cargarTab(tab, this.getPaginaActual(tab) - 1);
+  }
+
+  async irPaginaSiguiente(tab: TabAdmin): Promise<void> {
+    if (!this.puedeIrPaginaSiguiente(tab)) {
+      return;
+    }
+
+    await this.cargarTab(tab, this.getPaginaActual(tab) + 1);
   }
 
   async cambiarEstado(tab: TabAdmin, registro: any, event: Event): Promise<void> {
@@ -199,6 +220,15 @@ export class AdminPanelComponent implements OnInit {
     try {
       await this.adminService.eliminarRegistro(tabla.tableName, idData.idField, idData.idValue);
       this.eliminarEnMemoria(tab, idData.idField, idData.idValue);
+
+      const paginacion = this.paginacionMap[tab];
+      paginacion.total = Math.max(0, paginacion.total - 1);
+
+      const listaActual = this.getListaByTab(tab);
+      if (listaActual.length === 0 && paginacion.page > 1) {
+        await this.cargarTab(tab, paginacion.page - 1);
+      }
+
       this.exitoMensaje = 'Registro eliminado correctamente.';
     } catch (err) {
       this.errorMensaje = 'No se pudo eliminar el registro.';
@@ -261,6 +291,61 @@ export class AdminPanelComponent implements OnInit {
       case 'solicitudesTraslado':
         this.solicitudesTraslado = [...this.solicitudesTraslado];
         break;
+    }
+  }
+
+  private async cargarTab(tab: TabAdmin, page: number): Promise<void> {
+    this.limpiarMensajes();
+    this.cargando = true;
+    this.paginacionMap[tab].loading = true;
+
+    try {
+      const resultado = await this.obtenerPagina(tab, page);
+      const listaNormalizada = resultado.data.map((item) => ({
+        ...item,
+        estado: this.normalizarEstado(item?.estado)
+      }));
+
+      this.paginacionMap[tab].page = resultado.page;
+      this.paginacionMap[tab].total = resultado.total;
+      this.paginacionMap[tab].loaded = true;
+
+      switch (tab) {
+        case 'cuidadores':
+          this.cuidadores = listaNormalizada;
+          break;
+        case 'transportistas':
+          this.transportistas = listaNormalizada;
+          break;
+        case 'solicitudesCuidado':
+          this.solicitudesCuidado = listaNormalizada;
+          break;
+        case 'solicitudesTraslado':
+          this.solicitudesTraslado = listaNormalizada;
+          break;
+      }
+    } catch (err) {
+      console.error(`Error al cargar datos de ${tab}:`, err);
+      this.errorMensaje = 'No se pudieron cargar los registros del panel.';
+    } finally {
+      this.cargando = false;
+      this.paginacionMap[tab].loading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  private async obtenerPagina(tab: TabAdmin, page: number): Promise<AdminPagedResult<any>> {
+    switch (tab) {
+      case 'cuidadores':
+        return this.adminService.getCuidadores(page, this.PAGE_SIZE);
+      case 'transportistas':
+        return this.adminService.getTransportistas(page, this.PAGE_SIZE);
+      case 'solicitudesCuidado':
+        return this.adminService.getSolicitudesCuidado(page, this.PAGE_SIZE);
+      case 'solicitudesTraslado':
+        return this.adminService.getSolicitudesTraslado(page, this.PAGE_SIZE);
+      default:
+        return { data: [], total: 0, page: 1, pageSize: this.PAGE_SIZE };
     }
   }
 
