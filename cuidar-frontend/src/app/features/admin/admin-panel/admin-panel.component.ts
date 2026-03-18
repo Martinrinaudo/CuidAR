@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService, EstadoSolicitud } from '../../../core/services/admin.service';
 
@@ -25,6 +25,7 @@ interface TablaConfig {
 })
 export class AdminPanelComponent implements OnInit {
   private adminService = inject(AdminService);
+  private cdr = inject(ChangeDetectorRef);
 
   tabActiva: TabAdmin = 'cuidadores';
   cargando: boolean = false;
@@ -77,6 +78,7 @@ export class AdminPanelComponent implements OnInit {
     this.tabActiva = tab;
     this.filtroEstado = 'todas';
     this.limpiarMensajes();
+    this.cdr.detectChanges();
   }
 
   async cargarDatos(): Promise<void> {
@@ -116,6 +118,7 @@ export class AdminPanelComponent implements OnInit {
       this.errorMensaje = 'No se pudieron cargar los registros del panel.';
     } finally {
       this.cargando = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -177,6 +180,7 @@ export class AdminPanelComponent implements OnInit {
       console.error('Error al actualizar estado:', err);
     } finally {
       this.procesando = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -201,16 +205,18 @@ export class AdminPanelComponent implements OnInit {
       console.error('Error al eliminar registro:', err);
     } finally {
       this.procesando = false;
+      this.cdr.detectChanges();
     }
   }
 
-  trackByRegistro(index: number, item: any): string | number {
-  const idValue = item?.Id ?? item?.id;
-  if (idValue !== undefined && idValue !== null) {
-    return idValue;
-  }
-  return `fallback-${index}`;
-}
+  trackByRegistro = (index: number, item: any): string | number => {
+    const idValue = item?.Id ?? item?.id;
+    if (idValue !== undefined && idValue !== null) {
+      return idValue;
+    }
+
+    return `fallback-${index}`;
+  };
 
   private normalizarEstado(estado: string | null | undefined): EstadoSolicitud {
     const valor = (estado ?? 'nueva').toString().trim().toLowerCase();
