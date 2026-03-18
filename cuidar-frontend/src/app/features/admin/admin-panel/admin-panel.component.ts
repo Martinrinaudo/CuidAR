@@ -204,14 +204,13 @@ export class AdminPanelComponent implements OnInit {
     }
   }
 
-  trackByRegistro = (index: number, item: any): string | number => {
-    const idValue = item?.Id ?? item?.id;
-    if (idValue !== undefined && idValue !== null) {
-      return idValue;
-    }
-
-    return `fallback-${index}`;
-  };
+  trackByRegistro(index: number, item: any): string | number {
+  const idValue = item?.Id ?? item?.id;
+  if (idValue !== undefined && idValue !== null) {
+    return idValue;
+  }
+  return `fallback-${index}`;
+}
 
   private normalizarEstado(estado: string | null | undefined): EstadoSolicitud {
     const valor = (estado ?? 'nueva').toString().trim().toLowerCase();
