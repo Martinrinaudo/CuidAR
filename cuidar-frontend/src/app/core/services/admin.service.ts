@@ -45,6 +45,14 @@ export class AdminService {
     return this.getPagedFromTable('SolicitudesTraslado', page, pageSize);
   }
 
+  async getEmpleadasDomesticas(page: number = 1, pageSize: number = 25): Promise<AdminPagedResult<any>> {
+    return this.getPagedFromTable('RegistrosEmpleadasDomesticas', page, pageSize);
+  }
+
+  async getSolicitudesEmpleadaDomestica(page: number = 1, pageSize: number = 25): Promise<AdminPagedResult<any>> {
+    return this.getPagedFromTable('SolicitudesEmpleadaDomestica', page, pageSize);
+  }
+
   async logout(): Promise<void> {
     await this.supabaseService.client.auth.signOut();
     this.router.navigate(['/admin/login']);

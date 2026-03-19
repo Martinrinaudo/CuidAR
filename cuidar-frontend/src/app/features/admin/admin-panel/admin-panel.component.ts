@@ -2,7 +2,13 @@ import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef }
 import { CommonModule } from '@angular/common';
 import { AdminService, AdminPagedResult, EstadoSolicitud } from '../../../core/services/admin.service';
 
-type TabAdmin = 'cuidadores' | 'transportistas' | 'solicitudesCuidado' | 'solicitudesTraslado';
+type TabAdmin =
+  | 'cuidadores'
+  | 'transportistas'
+  | 'solicitudesCuidado'
+  | 'solicitudesTraslado'
+  | 'empleadasDomesticas'
+  | 'solicitudesEmpleadaDomestica';
 
 interface EstadoOption {
   value: EstadoSolicitud;
@@ -46,12 +52,16 @@ export class AdminPanelComponent implements OnInit {
   transportistas: any[] = [];
   solicitudesCuidado: any[] = [];
   solicitudesTraslado: any[] = [];
+  empleadasDomesticas: any[] = [];
+  solicitudesEmpleadaDomestica: any[] = [];
 
   private readonly paginacionMap: Record<TabAdmin, PaginacionTab> = {
     cuidadores: { page: 1, total: 0, loaded: false, loading: false },
     transportistas: { page: 1, total: 0, loaded: false, loading: false },
     solicitudesCuidado: { page: 1, total: 0, loaded: false, loading: false },
-    solicitudesTraslado: { page: 1, total: 0, loaded: false, loading: false }
+    solicitudesTraslado: { page: 1, total: 0, loaded: false, loading: false },
+    empleadasDomesticas: { page: 1, total: 0, loaded: false, loading: false },
+    solicitudesEmpleadaDomestica: { page: 1, total: 0, loaded: false, loading: false }
   };
 
   readonly estadoOptions: EstadoOption[] = [
@@ -82,6 +92,16 @@ export class AdminPanelComponent implements OnInit {
       key: 'solicitudesTraslado',
       tableName: 'SolicitudesTraslado',
       labelSingular: 'solicitud de traslado'
+    },
+    empleadasDomesticas: {
+      key: 'empleadasDomesticas',
+      tableName: 'RegistrosEmpleadasDomesticas',
+      labelSingular: 'postulacion de empleada domestica'
+    },
+    solicitudesEmpleadaDomestica: {
+      key: 'solicitudesEmpleadaDomestica',
+      tableName: 'SolicitudesEmpleadaDomestica',
+      labelSingular: 'solicitud de empleada domestica'
     }
   };
 
@@ -272,6 +292,10 @@ export class AdminPanelComponent implements OnInit {
         return this.solicitudesCuidado;
       case 'solicitudesTraslado':
         return this.solicitudesTraslado;
+      case 'empleadasDomesticas':
+        return this.empleadasDomesticas;
+      case 'solicitudesEmpleadaDomestica':
+        return this.solicitudesEmpleadaDomestica;
       default:
         return [];
     }
@@ -290,6 +314,12 @@ export class AdminPanelComponent implements OnInit {
         break;
       case 'solicitudesTraslado':
         this.solicitudesTraslado = [...this.solicitudesTraslado];
+        break;
+      case 'empleadasDomesticas':
+        this.empleadasDomesticas = [...this.empleadasDomesticas];
+        break;
+      case 'solicitudesEmpleadaDomestica':
+        this.solicitudesEmpleadaDomestica = [...this.solicitudesEmpleadaDomestica];
         break;
     }
   }
@@ -323,6 +353,12 @@ export class AdminPanelComponent implements OnInit {
         case 'solicitudesTraslado':
           this.solicitudesTraslado = listaNormalizada;
           break;
+        case 'empleadasDomesticas':
+          this.empleadasDomesticas = listaNormalizada;
+          break;
+        case 'solicitudesEmpleadaDomestica':
+          this.solicitudesEmpleadaDomestica = listaNormalizada;
+          break;
       }
     } catch (err) {
       console.error(`Error al cargar datos de ${tab}:`, err);
@@ -344,6 +380,10 @@ export class AdminPanelComponent implements OnInit {
         return this.adminService.getSolicitudesCuidado(page, this.PAGE_SIZE);
       case 'solicitudesTraslado':
         return this.adminService.getSolicitudesTraslado(page, this.PAGE_SIZE);
+      case 'empleadasDomesticas':
+        return this.adminService.getEmpleadasDomesticas(page, this.PAGE_SIZE);
+      case 'solicitudesEmpleadaDomestica':
+        return this.adminService.getSolicitudesEmpleadaDomestica(page, this.PAGE_SIZE);
       default:
         return { data: [], total: 0, page: 1, pageSize: this.PAGE_SIZE };
     }
@@ -362,6 +402,12 @@ export class AdminPanelComponent implements OnInit {
         break;
       case 'solicitudesTraslado':
         this.solicitudesTraslado = this.solicitudesTraslado.filter((item) => item[idField] !== idValue);
+        break;
+      case 'empleadasDomesticas':
+        this.empleadasDomesticas = this.empleadasDomesticas.filter((item) => item[idField] !== idValue);
+        break;
+      case 'solicitudesEmpleadaDomestica':
+        this.solicitudesEmpleadaDomestica = this.solicitudesEmpleadaDomestica.filter((item) => item[idField] !== idValue);
         break;
     }
   }

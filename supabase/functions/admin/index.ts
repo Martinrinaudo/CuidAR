@@ -77,7 +77,7 @@ serve(async (req) => {
   const path = url.pathname.split("/").pop();
 
   try {
-    if (req.method === "GET" && path === "health") {
+    if (req.method === "GET" && (path === "health" || path === "admin")) {
       return new Response(
         JSON.stringify({ ok: true, service: "admin", timestamp: new Date().toISOString() }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -159,6 +159,28 @@ serve(async (req) => {
     if (req.method === "GET" && path === "solicitudes-traslado") {
       const { data, error } = await supabaseAsUser
         .from("SolicitudesTraslado")
+        .select("*")
+        .order("FechaEnvio", { ascending: false });
+      if (error) throw error;
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (req.method === "GET" && path === "empleadas-domesticas") {
+      const { data, error } = await supabaseAsUser
+        .from("RegistrosEmpleadasDomesticas")
+        .select("*")
+        .order("FechaEnvio", { ascending: false });
+      if (error) throw error;
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (req.method === "GET" && path === "solicitudes-empleada-domestica") {
+      const { data, error } = await supabaseAsUser
+        .from("SolicitudesEmpleadaDomestica")
         .select("*")
         .order("FechaEnvio", { ascending: false });
       if (error) throw error;

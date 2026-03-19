@@ -69,4 +69,34 @@ export class FormulariosService {
     if (error) throw error;
     return { message: 'Solicitud registrada' };
   }
+
+  async registrarEmpleadaDomestica(data: any) {
+    const { error } = await this.supabaseService.client.from('RegistrosEmpleadasDomesticas').insert({
+      Nombre: data.nombre,
+      Email: data.email,
+      Telefono: data.telefono,
+      DiasDisponibles: data.diasDisponibles,
+      Zona: data.zona,
+      Descripcion: data.descripcion,
+      estado: 'nueva',
+      FechaEnvio: new Date().toISOString()
+    });
+    if (error) throw error;
+    return { message: 'Postulacion registrada' };
+  }
+
+  async crearSolicitudEmpleadaDomestica(data: any) {
+    const { error } = await this.supabaseService.client.from('SolicitudesEmpleadaDomestica').insert({
+      Nombre: data.nombre,
+      Email: data.email,
+      Telefono: data.telefono,
+      Zona: data.zona,
+      Domicilio: data.domicilio,
+      DescripcionTareas: data.descripcionTareas,
+      estado: 'nueva',
+      FechaEnvio: new Date().toISOString()
+    });
+    if (error) throw error;
+    return { message: 'Solicitud registrada' };
+  }
 }

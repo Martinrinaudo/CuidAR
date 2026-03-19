@@ -1,0 +1,91 @@
+<div class="formulario-container">
+  <nav class="form-navbar">
+    <div class="form-navbar-inner">
+      <a class="form-navbar-brand" routerLink="/">
+        <img src="assets/logo.png" alt="CuidAR" width="86" height="70" loading="lazy"><span>CuidAR</span>
+      </a>
+      <button class="btn-volver" (click)="volver()">← Volver</button>
+    </div>
+  </nav>
+
+  <div class="form-hero hero-domestica">
+    <div class="form-hero-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7h18"/>
+        <path d="M5 7v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7"/>
+        <path d="M9 11v6"/>
+        <path d="M15 11v6"/>
+      </svg>
+    </div>
+    <h1>Postulación como Empleada Doméstica</h1>
+    <p>Dejanos tus datos para sumarte a la red de trabajo doméstico de CuidAR</p>
+  </div>
+
+  <div class="form-card-wrap">
+    <div class="formulario-card">
+      <div class="formulario-body">
+        <div class="mensaje-exito" *ngIf="mensaje">✓ {{ mensaje }}</div>
+        <div class="mensaje-error" *ngIf="error">✗ {{ error }}</div>
+
+        <form [formGroup]="postulacionForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" formControlName="nombre" placeholder="Ej: Laura Fernández"
+              [class.error]="postulacionForm.get('nombre')?.invalid && postulacionForm.get('nombre')?.touched">
+            <span class="error-text" *ngIf="postulacionForm.get('nombre')?.invalid && postulacionForm.get('nombre')?.touched">Nombre debe tener al menos 3 caracteres</span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" formControlName="email" placeholder="ejemplo@email.com"
+              [class.error]="postulacionForm.get('email')?.invalid && postulacionForm.get('email')?.touched">
+            <span class="error-text" *ngIf="postulacionForm.get('email')?.invalid && postulacionForm.get('email')?.touched">Email inválido</span>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" formControlName="telefono" placeholder="Ej: 1134567890"
+              [class.error]="postulacionForm.get('telefono')?.invalid && postulacionForm.get('telefono')?.touched">
+            <span class="error-text" *ngIf="postulacionForm.get('telefono')?.invalid && postulacionForm.get('telefono')?.touched">Teléfono debe tener 10 dígitos</span>
+          </div>
+
+          <div class="form-group">
+            <label for="diasDisponibles">Días disponibles *</label>
+            <select id="diasDisponibles" formControlName="diasDisponibles"
+              [class.error]="postulacionForm.get('diasDisponibles')?.invalid && postulacionForm.get('diasDisponibles')?.touched">
+              <option value="">Seleccioná disponibilidad</option>
+              <option value="Lunes a Viernes">Lunes a Viernes</option>
+              <option value="Lunes a Sábado">Lunes a Sábado</option>
+              <option value="Lunes a Domingo">Lunes a Domingo</option>
+              <option value="Fines de semana">Fines de semana</option>
+            </select>
+            <span class="error-text" *ngIf="postulacionForm.get('diasDisponibles')?.invalid && postulacionForm.get('diasDisponibles')?.touched">Días disponibles es requerido</span>
+          </div>
+
+          <div class="form-group">
+            <label for="zona">Zona donde trabajás *</label>
+            <input type="text" id="zona" formControlName="zona" placeholder="Ej: Avellaneda, Zona Sur"
+              [class.error]="postulacionForm.get('zona')?.invalid && postulacionForm.get('zona')?.touched">
+            <span class="error-text" *ngIf="postulacionForm.get('zona')?.invalid && postulacionForm.get('zona')?.touched">Zona es requerida</span>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Breve descripción *</label>
+            <textarea id="descripcion" formControlName="descripcion" rows="4"
+              placeholder="Contanos qué tareas hacés habitualmente (limpieza, cocina, planchado, etc.)"
+              [class.error]="postulacionForm.get('descripcion')?.invalid && postulacionForm.get('descripcion')?.touched"></textarea>
+            <span class="error-text" *ngIf="postulacionForm.get('descripcion')?.invalid && postulacionForm.get('descripcion')?.touched">La descripción debe tener al menos 10 caracteres</span>
+          </div>
+        </form>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="volver()">Cancelar</button>
+        <button type="submit" class="btn-submit" [disabled]="postulacionForm.invalid || enviando" (click)="onSubmit()">
+          {{ enviando ? 'Enviando...' : 'Enviar Postulación' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

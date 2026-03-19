@@ -44,6 +44,16 @@
         <span class="stat-label">Sol. Traslado</span>
         <span class="stat-count">{{ getTotalRegistros('solicitudesTraslado') }}</span>
       </div>
+      <div class="stat-chip">
+        <span class="stat-dot stat-dot-teal"></span>
+        <span class="stat-label">Post. Doméstica</span>
+        <span class="stat-count">{{ getTotalRegistros('empleadasDomesticas') }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-dot stat-dot-fuchsia"></span>
+        <span class="stat-label">Sol. Doméstica</span>
+        <span class="stat-count">{{ getTotalRegistros('solicitudesEmpleadaDomestica') }}</span>
+      </div>
     </div>
   </div>
 
@@ -60,6 +70,12 @@
     </button>
     <button class="tab" [class.active]="tabActiva === 'solicitudesTraslado'" (click)="cambiarTab('solicitudesTraslado')">
       Solicitudes Traslado
+    </button>
+    <button class="tab" [class.active]="tabActiva === 'empleadasDomesticas'" (click)="cambiarTab('empleadasDomesticas')">
+      Postulantes Doméstica
+    </button>
+    <button class="tab" [class.active]="tabActiva === 'solicitudesEmpleadaDomestica'" (click)="cambiarTab('solicitudesEmpleadaDomestica')">
+      Solicitudes Doméstica
     </button>
   </div>
 
@@ -338,6 +354,130 @@
         </button>
         <span class="record-count">Página {{ getPaginaActual('solicitudesTraslado') }} de {{ getTotalPaginas('solicitudesTraslado') }}</span>
         <button class="tab" [disabled]="!puedeIrPaginaSiguiente('solicitudesTraslado')" (click)="irPaginaSiguiente('solicitudesTraslado')">
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <!-- Postulaciones Empleada Doméstica -->
+    <div *ngIf="!cargando && tabActiva === 'empleadasDomesticas'" class="tab-content">
+      <div class="tab-header">
+        <h2>Postulaciones Empleada Doméstica</h2>
+        <span class="record-count">{{ getTotalRegistros('empleadasDomesticas') }} postulaciones totales</span>
+      </div>
+      <div class="table-container" *ngIf="getCantidadFiltrada('empleadasDomesticas') > 0; else sinDatos">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Días disponibles</th>
+              <th>Zona</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of getRegistrosFiltrados('empleadasDomesticas'); trackBy: trackByRegistro">
+              <td><strong>{{ p.Nombre }}</strong></td>
+              <td class="td-muted">{{ p.Email }}</td>
+              <td>{{ p.Telefono }}</td>
+              <td>{{ p.DiasDisponibles }}</td>
+              <td>{{ p.Zona }}</td>
+              <td class="text-truncate">{{ p.Descripcion }}</td>
+              <td>
+                <div class="estado-cell">
+                  <span class="estado-badge" [ngClass]="getEstadoClase(p.estado)">{{ getEstadoLabel(p.estado) }}</span>
+                  <select
+                    [class]="'estado-select ' + getEstadoClase(p.estado)"
+                    [value]="p.estado"
+                    [disabled]="procesando"
+                    (change)="cambiarEstado('empleadasDomesticas', p, $event)">
+                    <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+                  </select>
+                </div>
+              </td>
+              <td class="td-muted">{{ formatearFecha(p.FechaEnvio) }}</td>
+              <td>
+                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('empleadasDomesticas', p)">
+                  🗑 Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-tools" *ngIf="getTotalRegistros('empleadasDomesticas') > 0">
+        <button class="tab" [disabled]="!puedeIrPaginaAnterior('empleadasDomesticas')" (click)="irPaginaAnterior('empleadasDomesticas')">
+          Anterior
+        </button>
+        <span class="record-count">Página {{ getPaginaActual('empleadasDomesticas') }} de {{ getTotalPaginas('empleadasDomesticas') }}</span>
+        <button class="tab" [disabled]="!puedeIrPaginaSiguiente('empleadasDomesticas')" (click)="irPaginaSiguiente('empleadasDomesticas')">
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <!-- Solicitudes Empleada Doméstica -->
+    <div *ngIf="!cargando && tabActiva === 'solicitudesEmpleadaDomestica'" class="tab-content">
+      <div class="tab-header">
+        <h2>Solicitudes Empleada Doméstica</h2>
+        <span class="record-count">{{ getTotalRegistros('solicitudesEmpleadaDomestica') }} solicitudes totales</span>
+      </div>
+      <div class="table-container" *ngIf="getCantidadFiltrada('solicitudesEmpleadaDomestica') > 0; else sinDatos">
+        <table>
+          <thead>
+            <tr>
+              <th>Solicitante</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Zona</th>
+              <th>Domicilio</th>
+              <th>Tareas</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of getRegistrosFiltrados('solicitudesEmpleadaDomestica'); trackBy: trackByRegistro">
+              <td><strong>{{ s.Nombre }}</strong></td>
+              <td class="td-muted">{{ s.Email }}</td>
+              <td>{{ s.Telefono }}</td>
+              <td>{{ s.Zona }}</td>
+              <td>{{ s.Domicilio }}</td>
+              <td class="text-truncate">{{ s.DescripcionTareas }}</td>
+              <td>
+                <div class="estado-cell">
+                  <span class="estado-badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
+                  <select
+                    [class]="'estado-select ' + getEstadoClase(s.estado)"
+                    [value]="s.estado"
+                    [disabled]="procesando"
+                    (change)="cambiarEstado('solicitudesEmpleadaDomestica', s, $event)">
+                    <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
+                  </select>
+                </div>
+              </td>
+              <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
+              <td>
+                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesEmpleadaDomestica', s)">
+                  🗑 Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-tools" *ngIf="getTotalRegistros('solicitudesEmpleadaDomestica') > 0">
+        <button class="tab" [disabled]="!puedeIrPaginaAnterior('solicitudesEmpleadaDomestica')" (click)="irPaginaAnterior('solicitudesEmpleadaDomestica')">
+          Anterior
+        </button>
+        <span class="record-count">Página {{ getPaginaActual('solicitudesEmpleadaDomestica') }} de {{ getTotalPaginas('solicitudesEmpleadaDomestica') }}</span>
+        <button class="tab" [disabled]="!puedeIrPaginaSiguiente('solicitudesEmpleadaDomestica')" (click)="irPaginaSiguiente('solicitudesEmpleadaDomestica')">
           Siguiente
         </button>
       </div>

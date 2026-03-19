@@ -108,6 +108,8 @@
 .stat-dot-amber  { background: var(--amber-400); }
 .stat-dot-indigo { background: var(--indigo-500); }
 .stat-dot-rose   { background: var(--rose-500); }
+.stat-dot-teal   { background: #0f766e; }
+.stat-dot-fuchsia { background: #c026d3; }
 .stat-label {
   font-size: 0.8rem;
   color: var(--gray-500);

@@ -23,6 +23,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/formularios/solicitud-traslado/solicitud-traslado.component').then(m => m.SolicitudTrasladoComponent)
   },
   {
+    path: 'formularios/empleada-domestica',
+    loadComponent: () => import('./features/formularios/empleada-domestica/empleada-domestica.component').then(m => m.EmpleadaDomesticaComponent)
+  },
+  {
+    path: 'formularios/solicitud-empleada-domestica',
+    loadComponent: () => import('./features/formularios/solicitud-empleada-domestica/solicitud-empleada-domestica.component').then(m => m.SolicitudEmpleadaDomesticaComponent)
+  },
+  {
     path: 'admin/login',
     loadComponent: () => import('./features/admin/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
   },

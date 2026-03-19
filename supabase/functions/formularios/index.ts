@@ -79,7 +79,7 @@ serve(async (req) => {
   const path = url.pathname.split("/").pop();
 
   try {
-    if (req.method === "GET" && path === "health") {
+    if (req.method === "GET" && (path === "health" || path === "formularios")) {
       return new Response(
         JSON.stringify({ ok: true, service: "formularios", timestamp: new Date().toISOString() }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -249,6 +249,82 @@ serve(async (req) => {
         Origen: origen.trim(),
         Destino: destino.trim(),
         FechaHora: fechaHora,
+        FechaEnvio: new Date().toISOString(),
+      });
+      if (error) throw error;
+      return new Response(JSON.stringify({ message: "Solicitud registrada" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ─── POST /empleada-domestica ───────────────────────────────────────
+    if (req.method === "POST" && path === "empleada-domestica") {
+      const { nombre, email, telefono, diasDisponibles, zona, descripcion } = body as Record<string, string>;
+
+      if (!nombre?.trim() || !email?.trim() || !telefono?.trim() || !diasDisponibles?.trim() || !zona?.trim() || !descripcion?.trim()) {
+        return new Response(
+          JSON.stringify({ error: "Todos los campos obligatorios deben completarse" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (!isValidEmail(email)) {
+        return new Response(
+          JSON.stringify({ error: "El email no es válido" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (!isValidPhone(telefono)) {
+        return new Response(
+          JSON.stringify({ error: "El teléfono no es válido" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const { error } = await supabase.from("RegistrosEmpleadasDomesticas").insert({
+        Nombre: nombre.trim(),
+        Email: email.trim().toLowerCase(),
+        Telefono: telefono.trim(),
+        DiasDisponibles: diasDisponibles.trim(),
+        Zona: zona.trim(),
+        Descripcion: descripcion.trim(),
+        FechaEnvio: new Date().toISOString(),
+      });
+      if (error) throw error;
+      return new Response(JSON.stringify({ message: "Postulación registrada" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ─── POST /solicitud-empleada-domestica ─────────────────────────────
+    if (req.method === "POST" && path === "solicitud-empleada-domestica") {
+      const { nombre, email, telefono, zona, domicilio, descripcionTareas } = body as Record<string, string>;
+
+      if (!nombre?.trim() || !email?.trim() || !telefono?.trim() || !zona?.trim() || !domicilio?.trim() || !descripcionTareas?.trim()) {
+        return new Response(
+          JSON.stringify({ error: "Todos los campos obligatorios deben completarse" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (!isValidEmail(email)) {
+        return new Response(
+          JSON.stringify({ error: "El email no es válido" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (!isValidPhone(telefono)) {
+        return new Response(
+          JSON.stringify({ error: "El teléfono no es válido" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const { error } = await supabase.from("SolicitudesEmpleadaDomestica").insert({
+        Nombre: nombre.trim(),
+        Email: email.trim().toLowerCase(),
+        Telefono: telefono.trim(),
+        Zona: zona.trim(),
+        Domicilio: domicilio.trim(),
+        DescripcionTareas: descripcionTareas.trim(),
         FechaEnvio: new Date().toISOString(),
       });
       if (error) throw error;

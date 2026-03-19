@@ -49,7 +49,7 @@
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
 }
 
@@ -137,6 +137,14 @@
   background: linear-gradient(135deg, #e67478 0%, #e5676d 100%);
 }
 
+.card-domestic-worker {
+  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+}
+
+.card-domestic-request {
+  background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
+}
+
 .card-transporter .card-content h2,
 .card-transporter .card-content p {
   color: #241717;
@@ -177,6 +185,22 @@
 
 .card-request-ride .card-action:hover {
   background: #a6374a;
+}
+
+.card-domestic-worker .card-action {
+  background: #0f766e;
+}
+
+.card-domestic-worker .card-action:hover {
+  background: #0d5e58;
+}
+
+.card-domestic-request .card-action {
+  background: #be185d;
+}
+
+.card-domestic-request .card-action:hover {
+  background: #9f1239;
 }
 
 .benefits {
@@ -240,7 +264,7 @@
   }
 
   .cards-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .action-card {
@@ -286,6 +310,10 @@
 }
 
 @media (max-width: 460px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
   .benefits-grid {
     grid-template-columns: 1fr;
   }

@@ -1,0 +1,84 @@
+<div class="formulario-container">
+  <nav class="form-navbar">
+    <div class="form-navbar-inner">
+      <a class="form-navbar-brand" routerLink="/">
+        <img src="assets/logo.png" alt="CuidAR" width="86" height="70" loading="lazy"><span>CuidAR</span>
+      </a>
+      <button class="btn-volver" (click)="volver()">← Volver</button>
+    </div>
+  </nav>
+
+  <div class="form-hero hero-solicitud-domestica">
+    <div class="form-hero-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 10l9-7 9 7"/>
+        <path d="M9 21V12h6v9"/>
+        <path d="M4 10v11h16V10"/>
+      </svg>
+    </div>
+    <h1>Solicitar Empleada Doméstica</h1>
+    <p>Contanos dónde vivís y qué tareas necesitás para asignarte el mejor perfil</p>
+  </div>
+
+  <div class="form-card-wrap">
+    <div class="formulario-card">
+      <div class="formulario-body">
+        <div class="mensaje-exito" *ngIf="mensaje">✓ {{ mensaje }}</div>
+        <div class="mensaje-error" *ngIf="error">✗ {{ error }}</div>
+
+        <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" formControlName="nombre" placeholder="Ej: Carlos Giménez"
+              [class.error]="solicitudForm.get('nombre')?.invalid && solicitudForm.get('nombre')?.touched">
+            <span class="error-text" *ngIf="solicitudForm.get('nombre')?.invalid && solicitudForm.get('nombre')?.touched">Nombre debe tener al menos 3 caracteres</span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" formControlName="email" placeholder="ejemplo@email.com"
+              [class.error]="solicitudForm.get('email')?.invalid && solicitudForm.get('email')?.touched">
+            <span class="error-text" *ngIf="solicitudForm.get('email')?.invalid && solicitudForm.get('email')?.touched">Email inválido</span>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" formControlName="telefono" placeholder="Ej: 1134567890"
+              [class.error]="solicitudForm.get('telefono')?.invalid && solicitudForm.get('telefono')?.touched">
+            <span class="error-text" *ngIf="solicitudForm.get('telefono')?.invalid && solicitudForm.get('telefono')?.touched">Teléfono debe tener 10 dígitos</span>
+          </div>
+
+          <div class="form-group">
+            <label for="zona">Zona *</label>
+            <input type="text" id="zona" formControlName="zona" placeholder="Ej: Banfield, Zona Sur"
+              [class.error]="solicitudForm.get('zona')?.invalid && solicitudForm.get('zona')?.touched">
+            <span class="error-text" *ngIf="solicitudForm.get('zona')?.invalid && solicitudForm.get('zona')?.touched">Zona es requerida</span>
+          </div>
+
+          <div class="form-group">
+            <label for="domicilio">Domicilio / referencia de ubicación *</label>
+            <input type="text" id="domicilio" formControlName="domicilio" placeholder="Ej: Calle y altura o referencia"
+              [class.error]="solicitudForm.get('domicilio')?.invalid && solicitudForm.get('domicilio')?.touched">
+            <span class="error-text" *ngIf="solicitudForm.get('domicilio')?.invalid && solicitudForm.get('domicilio')?.touched">Debe tener al menos 5 caracteres</span>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcionTareas">Descripción de trabajos a realizar *</label>
+            <textarea id="descripcionTareas" formControlName="descripcionTareas" rows="4"
+              placeholder="Ej: limpieza general, cocina básica y planchado, 3 veces por semana"
+              [class.error]="solicitudForm.get('descripcionTareas')?.invalid && solicitudForm.get('descripcionTareas')?.touched"></textarea>
+            <span class="error-text" *ngIf="solicitudForm.get('descripcionTareas')?.invalid && solicitudForm.get('descripcionTareas')?.touched">La descripción debe tener al menos 10 caracteres</span>
+          </div>
+        </form>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="volver()">Cancelar</button>
+        <button type="submit" class="btn-submit" [disabled]="solicitudForm.invalid || enviando" (click)="onSubmit()">
+          {{ enviando ? 'Enviando...' : 'Enviar Solicitud' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
