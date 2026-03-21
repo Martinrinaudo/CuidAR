@@ -336,6 +336,10 @@ table.table-domesticas td:nth-child(6) {
   min-width: 160px;
 }
 
+.estado-cell .btn-delete {
+  align-self: flex-start;
+}
+
 .estado-badge {
   display: inline-flex;
   width: fit-content;

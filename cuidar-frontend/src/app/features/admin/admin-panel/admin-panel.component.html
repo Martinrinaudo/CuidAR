@@ -377,7 +377,6 @@
               <th>Descripción</th>
               <th>Estado</th>
               <th>Fecha</th>
-              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -398,14 +397,12 @@
                     (change)="cambiarEstado('empleadasDomesticas', p, $event)">
                     <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
                   </select>
+                  <button class="btn-delete" [disabled]="procesando" (click)="eliminar('empleadasDomesticas', p)">
+                    🗑 Eliminar
+                  </button>
                 </div>
               </td>
               <td class="td-muted">{{ formatearFecha(p.FechaEnvio) }}</td>
-              <td>
-                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('empleadasDomesticas', p)">
-                  🗑 Eliminar
-                </button>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -439,7 +436,6 @@
               <th>Tareas</th>
               <th>Estado</th>
               <th>Fecha</th>
-              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -460,14 +456,12 @@
                     (change)="cambiarEstado('solicitudesEmpleadaDomestica', s, $event)">
                     <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
                   </select>
+                  <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesEmpleadaDomestica', s)">
+                    🗑 Eliminar
+                  </button>
                 </div>
               </td>
               <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
-              <td>
-                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesEmpleadaDomestica', s)">
-                  🗑 Eliminar
-                </button>
-              </td>
             </tr>
           </tbody>
         </table>
