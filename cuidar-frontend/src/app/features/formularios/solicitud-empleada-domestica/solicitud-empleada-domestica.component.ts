@@ -49,7 +49,7 @@ export class SolicitudEmpleadaDomesticaComponent {
           this.router.navigate(['/']);
         }, 3000);
       } catch (err) {
-        this.error = 'Ocurrió un error al enviar la solicitud. Intentá nuevamente.';
+        this.error = err instanceof Error ? err.message : 'Ocurrio un error al enviar la solicitud. Intenta nuevamente.';
         this.enviando = false;
         console.error('Error:', err);
       }
