@@ -89,7 +89,7 @@ export class AdminService {
 
     const { data, error, count } = await this.supabaseService.client
       .from(tableName)
-      .select('*', { count: 'exact' })
+      .select('*', { count: 'planned' })
       .order('FechaEnvio', { ascending: false })
       .range(from, to);
 
