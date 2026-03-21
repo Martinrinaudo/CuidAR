@@ -279,6 +279,54 @@ tbody td {
   font-size: 0.88rem;
   color: var(--gray-800);
   vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+thead th:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  min-width: 130px;
+  background: var(--gray-50);
+  border-left: 1px solid var(--gray-200);
+}
+
+tbody td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  min-width: 130px;
+  background: var(--white);
+  border-left: 1px solid var(--gray-200);
+}
+
+tbody tr:hover td:last-child {
+  background: var(--gray-50);
+}
+
+table.table-domesticas {
+  table-layout: fixed;
+  min-width: 1220px;
+}
+
+table.table-domesticas th:nth-child(2),
+table.table-domesticas td:nth-child(2),
+table.table-domesticas th:nth-child(6),
+table.table-domesticas td:nth-child(6) {
+  width: 220px;
+}
+
+table.table-domesticas th:last-child,
+table.table-domesticas td:last-child {
+  width: 150px;
+  min-width: 150px;
+}
+
+table.table-domesticas td:nth-child(2),
+table.table-domesticas td:nth-child(6) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .estado-cell {
@@ -346,6 +394,10 @@ tbody td {
   font-size: 0.76rem;
   font-weight: 700;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 

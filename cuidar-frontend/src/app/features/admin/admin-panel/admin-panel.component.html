@@ -108,7 +108,7 @@
         <span class="record-count">{{ getTotalRegistros('cuidadores') }} registros totales</span>
       </div>
       <div class="table-container" *ngIf="getCantidadFiltrada('cuidadores') > 0; else sinDatos">
-        <table>
+        <table class="table-domesticas">
           <thead>
             <tr>
               <th>Nombre</th>
@@ -174,7 +174,7 @@
         <span class="record-count">{{ getTotalRegistros('transportistas') }} registros totales</span>
       </div>
       <div class="table-container" *ngIf="getCantidadFiltrada('transportistas') > 0; else sinDatos">
-        <table>
+        <table class="table-domesticas">
           <thead>
             <tr>
               <th>Nombre</th>
