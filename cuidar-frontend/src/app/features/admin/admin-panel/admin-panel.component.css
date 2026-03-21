@@ -242,11 +242,13 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--gray-200);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 table {
   width: 100%;
+  min-width: 1120px;
   border-collapse: collapse;
 }
 
