@@ -1,8 +1,8 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { FormulariosService } from '../../../core/services/formularios.service';
+import { EmpleadaDomesticaFormData, FormulariosService } from '../../../core/services/formularios.service';
 
 @Component({
   selector: 'app-empleada-domestica',
@@ -13,52 +13,58 @@ import { FormulariosService } from '../../../core/services/formularios.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmpleadaDomesticaComponent {
-  private fb = inject(FormBuilder);
-  private formulariosService = inject(FormulariosService);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly formulariosService = inject(FormulariosService);
+  private readonly router = inject(Router);
 
-  postulacionForm: FormGroup;
-  mensaje: string = '';
-  error: string = '';
-  enviando: boolean = false;
+  readonly postulacionForm = this.fb.nonNullable.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    diasDisponibles: ['', [Validators.required]],
+    zona: ['', [Validators.required]],
+    descripcion: ['', [Validators.required, Validators.minLength(10)]]
+  });
 
-  constructor() {
-    this.postulacionForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      diasDisponibles: ['', [Validators.required]],
-      zona: ['', [Validators.required]],
-      descripcion: ['', [Validators.required, Validators.minLength(10)]]
-    });
-  }
+  mensaje = '';
+  error = '';
+  enviando = false;
+
+  private readonly formDefaults: EmpleadaDomesticaFormData = {
+    nombre: '',
+    email: '',
+    telefono: '',
+    diasDisponibles: '',
+    zona: '',
+    descripcion: ''
+  };
 
   async onSubmit(): Promise<void> {
-    if (this.postulacionForm.valid && !this.enviando) {
-      this.enviando = true;
-      this.error = '';
-      this.mensaje = '';
-
-      try {
-        await this.formulariosService.registrarEmpleadaDomestica(this.postulacionForm.value);
-        this.mensaje = '¡Postulación enviada! Te contactaremos en breve.';
-        this.postulacionForm.reset();
-        this.enviando = false;
-
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 3000);
-      } catch (err) {
-        this.error = 'Ocurrió un error al enviar la postulación. Intentá nuevamente.';
-        this.enviando = false;
-        console.error('Error:', err);
-      }
-    } else {
+    if (!this.postulacionForm.valid || this.enviando) {
       this.error = 'Por favor completa todos los campos correctamente.';
+      return;
+    }
+
+    this.enviando = true;
+    this.error = '';
+    this.mensaje = '';
+
+    try {
+      await this.formulariosService.registrarEmpleadaDomestica(this.postulacionForm.getRawValue());
+      this.mensaje = '¡Postulación enviada! Te contactaremos en breve.';
+      this.postulacionForm.reset(this.formDefaults);
+      setTimeout(() => {
+        void this.router.navigate(['/']);
+      }, 3000);
+    } catch (err) {
+      this.error = err instanceof Error ? err.message : 'Ocurrió un error al enviar la postulación. Intentá nuevamente.';
+      console.error('Error:', err);
+    } finally {
+      this.enviando = false;
     }
   }
 
   volver(): void {
-    this.router.navigate(['/']);
+    void this.router.navigate(['/']);
   }
 }

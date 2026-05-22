@@ -1,5 +1,7 @@
-import { Routes } from '@angular/router';
-import { adminGuard } from './core/guards/admin.guard';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
+
+const adminGuardLoader = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
+  import('./core/guards/admin.guard').then(({ adminGuard }) => adminGuard(route, state));
 
 export const routes: Routes = [
   {
@@ -41,7 +43,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/panel',
-    canActivate: [adminGuard],
+    canActivate: [adminGuardLoader],
     loadComponent: () => import('./features/admin/admin-panel/admin-panel.component').then(m => m.AdminPanelComponent)
   },
   {

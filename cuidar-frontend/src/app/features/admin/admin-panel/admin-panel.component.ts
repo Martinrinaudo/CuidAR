@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminService, AdminPagedResult, EstadoSolicitud } from '../../../core/services/admin.service';
+import { AdminPagedResult, AdminRecord, AdminService, EstadoSolicitud } from '../../../core/services/admin.service';
 
 type TabAdmin =
   | 'cuidadores'
@@ -37,23 +37,23 @@ interface PaginacionTab {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPanelComponent implements OnInit {
-  private adminService = inject(AdminService);
-  private cdr = inject(ChangeDetectorRef);
-  private readonly PAGE_SIZE = 25;
+  private readonly adminService = inject(AdminService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly pageSize = 25;
 
   tabActiva: TabAdmin = 'cuidadores';
-  cargando: boolean = false;
-  procesando: boolean = false;
+  cargando = false;
+  procesando = false;
   filtroEstado: 'todas' | EstadoSolicitud = 'todas';
-  errorMensaje: string = '';
-  exitoMensaje: string = '';
-  
-  cuidadores: any[] = [];
-  transportistas: any[] = [];
-  solicitudesCuidado: any[] = [];
-  solicitudesTraslado: any[] = [];
-  empleadasDomesticas: any[] = [];
-  solicitudesEmpleadaDomestica: any[] = [];
+  errorMensaje = '';
+  exitoMensaje = '';
+
+  cuidadores: AdminRecord[] = [];
+  transportistas: AdminRecord[] = [];
+  solicitudesCuidado: AdminRecord[] = [];
+  solicitudesTraslado: AdminRecord[] = [];
+  empleadasDomesticas: AdminRecord[] = [];
+  solicitudesEmpleadaDomestica: AdminRecord[] = [];
 
   private readonly paginacionMap: Record<TabAdmin, PaginacionTab> = {
     cuidadores: { page: 1, total: 0, loaded: false, loading: false },
@@ -106,7 +106,7 @@ export class AdminPanelComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.cargarDatos();
+    void this.cargarDatos();
   }
 
   cambiarTab(tab: TabAdmin): void {
@@ -119,7 +119,19 @@ export class AdminPanelComponent implements OnInit {
       return;
     }
 
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
+  }
+
+  onFiltroEstadoChange(event: Event): void {
+    const target = event.target;
+    if (!(target instanceof HTMLSelectElement)) {
+      this.errorMensaje = 'No se pudo actualizar el filtro de estado.';
+      return;
+    }
+
+    const value = target.value;
+    this.filtroEstado = value === 'todas' ? 'todas' : this.normalizarEstado(value);
+    this.cdr.markForCheck();
   }
 
   async cargarDatos(): Promise<void> {
@@ -131,13 +143,18 @@ export class AdminPanelComponent implements OnInit {
       await this.adminService.logout();
     } catch (err) {
       console.error('Error al cerrar sesión:', err);
+      this.errorMensaje = err instanceof Error ? err.message : 'No se pudo cerrar la sesión.';
+      this.cdr.markForCheck();
     }
   }
 
-  formatearFecha(fecha: string): string {
-    if (!fecha) return 'N/A';
+  formatearFecha(fecha: string | null | undefined): string {
+    if (!fecha) {
+      return 'N/A';
+    }
+
     const date = new Date(fecha);
-    return date.toLocaleString('es-AR');
+    return Number.isNaN(date.getTime()) ? 'N/A' : date.toLocaleString('es-AR');
   }
 
   getEstadoLabel(estado: string | null | undefined): string {
@@ -146,17 +163,28 @@ export class AdminPanelComponent implements OnInit {
   }
 
   getEstadoClase(estado: string | null | undefined): string {
-    const estadoNormalizado = this.normalizarEstado(estado);
-    return `estado-${estadoNormalizado}`;
+    switch (this.normalizarEstado(estado)) {
+      case 'vista':
+        return 'badge-success';
+      case 'en_proceso':
+        return 'badge-warning';
+      case 'asignada':
+        return 'badge-info';
+      case 'cancelada':
+        return 'badge-danger';
+      case 'nueva':
+      default:
+        return 'badge-secondary';
+    }
   }
 
-  getRegistrosFiltrados(tab: TabAdmin): any[] {
+  getRegistrosFiltrados(tab: TabAdmin): AdminRecord[] {
     const lista = this.getListaByTab(tab);
     if (this.filtroEstado === 'todas') {
       return lista;
     }
 
-    return lista.filter((item) => this.normalizarEstado(item?.estado) === this.filtroEstado);
+    return lista.filter((item) => this.normalizarEstado(item.estado) === this.filtroEstado);
   }
 
   getCantidadFiltrada(tab: TabAdmin): number {
@@ -173,7 +201,7 @@ export class AdminPanelComponent implements OnInit {
 
   getTotalPaginas(tab: TabAdmin): number {
     const total = this.paginacionMap[tab].total;
-    return Math.max(1, Math.ceil(total / this.PAGE_SIZE));
+    return Math.max(1, Math.ceil(total / this.pageSize));
   }
 
   puedeIrPaginaAnterior(tab: TabAdmin): boolean {
@@ -200,10 +228,15 @@ export class AdminPanelComponent implements OnInit {
     await this.cargarTab(tab, this.getPaginaActual(tab) + 1);
   }
 
-  async cambiarEstado(tab: TabAdmin, registro: any, event: Event): Promise<void> {
-    const target = event.target as HTMLSelectElement;
-    const nuevoEstado = target.value as EstadoSolicitud;
-    const estadoAnterior = this.normalizarEstado(registro?.estado);
+  async cambiarEstado(tab: TabAdmin, registro: AdminRecord, event: Event): Promise<void> {
+    const target = event.target;
+    if (!(target instanceof HTMLSelectElement)) {
+      this.errorMensaje = 'No se pudo leer el nuevo estado.';
+      return;
+    }
+
+    const nuevoEstado = this.normalizarEstado(target.value);
+    const estadoAnterior = this.normalizarEstado(registro.estado);
     const idData = this.obtenerIdRegistro(registro);
 
     this.limpiarMensajes();
@@ -214,18 +247,17 @@ export class AdminPanelComponent implements OnInit {
       const tabla = this.tablaConfigMap[tab];
       await this.adminService.actualizarEstado(tabla.tableName, idData.idField, idData.idValue, nuevoEstado);
       this.exitoMensaje = `Estado actualizado a ${this.getEstadoLabel(nuevoEstado)}.`;
-      this.refreshLista(tab);
     } catch (err) {
       registro.estado = estadoAnterior;
-      this.errorMensaje = 'No se pudo actualizar el estado. Intenta nuevamente.';
+      this.errorMensaje = err instanceof Error ? err.message : 'No se pudo actualizar el estado. Intenta nuevamente.';
       console.error('Error al actualizar estado:', err);
     } finally {
       this.procesando = false;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }
   }
 
-  async eliminar(tab: TabAdmin, registro: any): Promise<void> {
+  async eliminar(tab: TabAdmin, registro: AdminRecord): Promise<void> {
     const tabla = this.tablaConfigMap[tab];
     const idData = this.obtenerIdRegistro(registro);
 
@@ -251,21 +283,21 @@ export class AdminPanelComponent implements OnInit {
 
       this.exitoMensaje = 'Registro eliminado correctamente.';
     } catch (err) {
-      this.errorMensaje = 'No se pudo eliminar el registro.';
+      this.errorMensaje = err instanceof Error ? err.message : 'No se pudo eliminar el registro.';
       console.error('Error al eliminar registro:', err);
     } finally {
       this.procesando = false;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }
   }
 
-  trackByRegistro = (index: number, item: any): string | number => {
-    const idValue = item?.Id ?? item?.id;
+  trackByRegistro = (_index: number, item: AdminRecord): string | number => {
+    const idValue = item.Id ?? item.id;
     if (idValue !== undefined && idValue !== null) {
       return idValue;
     }
 
-    return `fallback-${index}`;
+    return _index;
   };
 
   private normalizarEstado(estado: string | null | undefined): EstadoSolicitud {
@@ -275,14 +307,20 @@ export class AdminPanelComponent implements OnInit {
       return 'en_proceso';
     }
 
-    if (valor === 'nueva' || valor === 'vista' || valor === 'en_proceso' || valor === 'asignada' || valor === 'cancelada') {
+    if (
+      valor === 'nueva' ||
+      valor === 'vista' ||
+      valor === 'en_proceso' ||
+      valor === 'asignada' ||
+      valor === 'cancelada'
+    ) {
       return valor;
     }
 
     return 'nueva';
   }
 
-  private getListaByTab(tab: TabAdmin): any[] {
+  private getListaByTab(tab: TabAdmin): AdminRecord[] {
     switch (tab) {
       case 'cuidadores':
         return this.cuidadores;
@@ -296,30 +334,28 @@ export class AdminPanelComponent implements OnInit {
         return this.empleadasDomesticas;
       case 'solicitudesEmpleadaDomestica':
         return this.solicitudesEmpleadaDomestica;
-      default:
-        return [];
     }
   }
 
-  private refreshLista(tab: TabAdmin): void {
+  private setListaByTab(tab: TabAdmin, lista: AdminRecord[]): void {
     switch (tab) {
       case 'cuidadores':
-        this.cuidadores = [...this.cuidadores];
+        this.cuidadores = lista;
         break;
       case 'transportistas':
-        this.transportistas = [...this.transportistas];
+        this.transportistas = lista;
         break;
       case 'solicitudesCuidado':
-        this.solicitudesCuidado = [...this.solicitudesCuidado];
+        this.solicitudesCuidado = lista;
         break;
       case 'solicitudesTraslado':
-        this.solicitudesTraslado = [...this.solicitudesTraslado];
+        this.solicitudesTraslado = lista;
         break;
       case 'empleadasDomesticas':
-        this.empleadasDomesticas = [...this.empleadasDomesticas];
+        this.empleadasDomesticas = lista;
         break;
       case 'solicitudesEmpleadaDomestica':
-        this.solicitudesEmpleadaDomestica = [...this.solicitudesEmpleadaDomestica];
+        this.solicitudesEmpleadaDomestica = lista;
         break;
     }
   }
@@ -331,93 +367,53 @@ export class AdminPanelComponent implements OnInit {
 
     try {
       const resultado = await this.obtenerPagina(tab, page);
-      const listaNormalizada = resultado.data.map((item) => ({
+      const listaNormalizada: AdminRecord[] = resultado.data.map((item) => ({
         ...item,
-        estado: this.normalizarEstado(item?.estado)
+        estado: this.normalizarEstado(item.estado)
       }));
 
       this.paginacionMap[tab].page = resultado.page;
       this.paginacionMap[tab].total = resultado.total;
       this.paginacionMap[tab].loaded = true;
-
-      switch (tab) {
-        case 'cuidadores':
-          this.cuidadores = listaNormalizada;
-          break;
-        case 'transportistas':
-          this.transportistas = listaNormalizada;
-          break;
-        case 'solicitudesCuidado':
-          this.solicitudesCuidado = listaNormalizada;
-          break;
-        case 'solicitudesTraslado':
-          this.solicitudesTraslado = listaNormalizada;
-          break;
-        case 'empleadasDomesticas':
-          this.empleadasDomesticas = listaNormalizada;
-          break;
-        case 'solicitudesEmpleadaDomestica':
-          this.solicitudesEmpleadaDomestica = listaNormalizada;
-          break;
-      }
+      this.setListaByTab(tab, listaNormalizada);
     } catch (err) {
       console.error(`Error al cargar datos de ${tab}:`, err);
-      this.errorMensaje = 'No se pudieron cargar los registros del panel.';
+      this.errorMensaje = err instanceof Error ? err.message : 'No se pudieron cargar los registros del panel.';
     } finally {
       this.cargando = false;
       this.paginacionMap[tab].loading = false;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }
   }
 
-  private async obtenerPagina(tab: TabAdmin, page: number): Promise<AdminPagedResult<any>> {
+  private async obtenerPagina(tab: TabAdmin, page: number): Promise<AdminPagedResult> {
     switch (tab) {
       case 'cuidadores':
-        return this.adminService.getCuidadores(page, this.PAGE_SIZE);
+        return this.adminService.getCuidadores(page, this.pageSize);
       case 'transportistas':
-        return this.adminService.getTransportistas(page, this.PAGE_SIZE);
+        return this.adminService.getTransportistas(page, this.pageSize);
       case 'solicitudesCuidado':
-        return this.adminService.getSolicitudesCuidado(page, this.PAGE_SIZE);
+        return this.adminService.getSolicitudesCuidado(page, this.pageSize);
       case 'solicitudesTraslado':
-        return this.adminService.getSolicitudesTraslado(page, this.PAGE_SIZE);
+        return this.adminService.getSolicitudesTraslado(page, this.pageSize);
       case 'empleadasDomesticas':
-        return this.adminService.getEmpleadasDomesticas(page, this.PAGE_SIZE);
+        return this.adminService.getEmpleadasDomesticas(page, this.pageSize);
       case 'solicitudesEmpleadaDomestica':
-        return this.adminService.getSolicitudesEmpleadaDomestica(page, this.PAGE_SIZE);
-      default:
-        return { data: [], total: 0, page: 1, pageSize: this.PAGE_SIZE };
+        return this.adminService.getSolicitudesEmpleadaDomestica(page, this.pageSize);
     }
   }
 
   private eliminarEnMemoria(tab: TabAdmin, idField: string, idValue: number | string): void {
-    switch (tab) {
-      case 'cuidadores':
-        this.cuidadores = this.cuidadores.filter((item) => item[idField] !== idValue);
-        break;
-      case 'transportistas':
-        this.transportistas = this.transportistas.filter((item) => item[idField] !== idValue);
-        break;
-      case 'solicitudesCuidado':
-        this.solicitudesCuidado = this.solicitudesCuidado.filter((item) => item[idField] !== idValue);
-        break;
-      case 'solicitudesTraslado':
-        this.solicitudesTraslado = this.solicitudesTraslado.filter((item) => item[idField] !== idValue);
-        break;
-      case 'empleadasDomesticas':
-        this.empleadasDomesticas = this.empleadasDomesticas.filter((item) => item[idField] !== idValue);
-        break;
-      case 'solicitudesEmpleadaDomestica':
-        this.solicitudesEmpleadaDomestica = this.solicitudesEmpleadaDomestica.filter((item) => item[idField] !== idValue);
-        break;
-    }
+    const lista = this.getListaByTab(tab).filter((item) => item[idField] !== idValue);
+    this.setListaByTab(tab, lista);
   }
 
-  private obtenerIdRegistro(registro: any): { idField: string; idValue: number | string } {
-    if (registro?.Id !== undefined && registro?.Id !== null) {
+  private obtenerIdRegistro(registro: AdminRecord): { idField: string; idValue: number | string } {
+    if (registro.Id !== undefined && registro.Id !== null) {
       return { idField: 'Id', idValue: registro.Id };
     }
 
-    if (registro?.id !== undefined && registro?.id !== null) {
+    if (registro.id !== undefined && registro.id !== null) {
       return { idField: 'id', idValue: registro.id };
     }
 

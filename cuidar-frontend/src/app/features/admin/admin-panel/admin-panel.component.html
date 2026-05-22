@@ -9,7 +9,7 @@
           <span class="header-brand-sub">Panel de Administración</span>
         </div>
       </div>
-      <button class="btn-logout" (click)="cerrarSesion()">
+      <button class="btn btn-rose" (click)="cerrarSesion()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -83,15 +83,15 @@
     <div class="panel-tools" *ngIf="!cargando">
       <div class="filter-group">
         <label for="filtroEstado">Mostrar:</label>
-        <select id="filtroEstado" [value]="filtroEstado" (change)="filtroEstado = $any($event.target).value">
+        <select id="filtroEstado" [value]="filtroEstado" (change)="onFiltroEstadoChange($event)">
           <option value="todas">Todas</option>
           <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
         </select>
       </div>
 
       <div class="feedback" *ngIf="errorMensaje || exitoMensaje">
-        <p class="feedback-ok" *ngIf="exitoMensaje">{{ exitoMensaje }}</p>
-        <p class="feedback-error" *ngIf="errorMensaje">{{ errorMensaje }}</p>
+        <p class="alert alert-success" *ngIf="exitoMensaje">{{ exitoMensaje }}</p>
+        <p class="alert alert-error" *ngIf="errorMensaje">{{ errorMensaje }}</p>
       </div>
     </div>
 
@@ -125,7 +125,7 @@
           <tbody>
             <tr *ngFor="let c of getRegistrosFiltrados('cuidadores'); trackBy: trackByRegistro">
               <td><strong>{{ c.Nombre }}</strong></td>
-              <td class="td-muted">{{ c.Email }}</td>
+              <td>{{ c.Email }}</td>
               <td>{{ c.Telefono }}</td>
               <td>{{ c.ZonaCobertura }}</td>
               <td>{{ c.Horario }}</td>
@@ -136,9 +136,9 @@
               </td>
               <td>
                 <div class="estado-cell">
-                  <span class="estado-badge" [ngClass]="getEstadoClase(c.estado)">{{ getEstadoLabel(c.estado) }}</span>
+                  <span class="badge" [ngClass]="getEstadoClase(c.estado)">{{ getEstadoLabel(c.estado) }}</span>
                   <select
-                    [class]="'estado-select ' + getEstadoClase(c.estado)"
+                    class="form-control"
                     [value]="c.estado"
                     [disabled]="procesando"
                     (change)="cambiarEstado('cuidadores', c, $event)">
@@ -146,9 +146,9 @@
                   </select>
                 </div>
               </td>
-              <td class="td-muted">{{ formatearFecha(c.FechaEnvio) }}</td>
+              <td>{{ formatearFecha(c.FechaEnvio) }}</td>
               <td>
-                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('cuidadores', c)">
+                <button class="btn btn-rose" [disabled]="procesando" (click)="eliminar('cuidadores', c)">
                   🗑 Eliminar
                 </button>
               </td>
@@ -191,7 +191,7 @@
           <tbody>
             <tr *ngFor="let t of getRegistrosFiltrados('transportistas'); trackBy: trackByRegistro">
               <td><strong>{{ t.Nombre }}</strong></td>
-              <td class="td-muted">{{ t.Email }}</td>
+              <td>{{ t.Email }}</td>
               <td>{{ t.Telefono }}</td>
               <td>{{ t.ZonaCobertura }}</td>
               <td><span class="badge badge-info">{{ t.TipoVehiculo }}</span></td>
@@ -202,9 +202,9 @@
               </td>
               <td>
                 <div class="estado-cell">
-                  <span class="estado-badge" [ngClass]="getEstadoClase(t.estado)">{{ getEstadoLabel(t.estado) }}</span>
+                  <span class="badge" [ngClass]="getEstadoClase(t.estado)">{{ getEstadoLabel(t.estado) }}</span>
                   <select
-                    [class]="'estado-select ' + getEstadoClase(t.estado)"
+                    class="form-control"
                     [value]="t.estado"
                     [disabled]="procesando"
                     (change)="cambiarEstado('transportistas', t, $event)">
@@ -212,9 +212,9 @@
                   </select>
                 </div>
               </td>
-              <td class="td-muted">{{ formatearFecha(t.FechaEnvio) }}</td>
+              <td>{{ formatearFecha(t.FechaEnvio) }}</td>
               <td>
-                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('transportistas', t)">
+                <button class="btn btn-rose" [disabled]="procesando" (click)="eliminar('transportistas', t)">
                   🗑 Eliminar
                 </button>
               </td>
@@ -257,16 +257,16 @@
           <tbody>
             <tr *ngFor="let s of getRegistrosFiltrados('solicitudesCuidado'); trackBy: trackByRegistro">
               <td><strong>{{ s.Nombre }}</strong></td>
-              <td class="td-muted">{{ s.Email }}</td>
+              <td>{{ s.Email }}</td>
               <td>{{ s.Telefono }}</td>
               <td>{{ s.NombreFamiliar }}</td>
               <td>{{ s.Zona }}</td>
-              <td class="text-truncate">{{ s.Descripcion }}</td>
+              <td>{{ s.Descripcion }}</td>
               <td>
                 <div class="estado-cell">
-                  <span class="estado-badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
+                  <span class="badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
                   <select
-                    [class]="'estado-select ' + getEstadoClase(s.estado)"
+                    class="form-control"
                     [value]="s.estado"
                     [disabled]="procesando"
                     (change)="cambiarEstado('solicitudesCuidado', s, $event)">
@@ -274,9 +274,9 @@
                   </select>
                 </div>
               </td>
-              <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
+              <td>{{ formatearFecha(s.FechaEnvio) }}</td>
               <td>
-                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesCuidado', s)">
+                <button class="btn btn-rose" [disabled]="procesando" (click)="eliminar('solicitudesCuidado', s)">
                   🗑 Eliminar
                 </button>
               </td>
@@ -320,7 +320,7 @@
           <tbody>
             <tr *ngFor="let s of getRegistrosFiltrados('solicitudesTraslado'); trackBy: trackByRegistro">
               <td><strong>{{ s.Nombre }}</strong></td>
-              <td class="td-muted">{{ s.Email }}</td>
+              <td>{{ s.Email }}</td>
               <td>{{ s.Telefono }}</td>
               <td>{{ s.NombreFamiliar }}</td>
               <td>{{ s.Origen }}</td>
@@ -328,9 +328,9 @@
               <td><span class="badge badge-warning">{{ formatearFecha(s.FechaHora) }}</span></td>
               <td>
                 <div class="estado-cell">
-                  <span class="estado-badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
+                  <span class="badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
                   <select
-                    [class]="'estado-select ' + getEstadoClase(s.estado)"
+                    class="form-control"
                     [value]="s.estado"
                     [disabled]="procesando"
                     (change)="cambiarEstado('solicitudesTraslado', s, $event)">
@@ -338,9 +338,9 @@
                   </select>
                 </div>
               </td>
-              <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
+              <td>{{ formatearFecha(s.FechaEnvio) }}</td>
               <td>
-                <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesTraslado', s)">
+                <button class="btn btn-rose" [disabled]="procesando" (click)="eliminar('solicitudesTraslado', s)">
                   🗑 Eliminar
                 </button>
               </td>
@@ -382,27 +382,27 @@
           <tbody>
             <tr *ngFor="let p of getRegistrosFiltrados('empleadasDomesticas'); trackBy: trackByRegistro">
               <td><strong>{{ p.Nombre }}</strong></td>
-              <td class="td-muted">{{ p.Email }}</td>
+              <td>{{ p.Email }}</td>
               <td>{{ p.Telefono }}</td>
               <td>{{ p.DiasDisponibles }}</td>
               <td>{{ p.Zona }}</td>
-              <td class="text-truncate">{{ p.Descripcion }}</td>
+              <td>{{ p.Descripcion }}</td>
               <td>
                 <div class="estado-cell">
-                  <span class="estado-badge" [ngClass]="getEstadoClase(p.estado)">{{ getEstadoLabel(p.estado) }}</span>
+                  <span class="badge" [ngClass]="getEstadoClase(p.estado)">{{ getEstadoLabel(p.estado) }}</span>
                   <select
-                    [class]="'estado-select ' + getEstadoClase(p.estado)"
+                    class="form-control"
                     [value]="p.estado"
                     [disabled]="procesando"
                     (change)="cambiarEstado('empleadasDomesticas', p, $event)">
                     <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
                   </select>
-                  <button class="btn-delete" [disabled]="procesando" (click)="eliminar('empleadasDomesticas', p)">
+                  <button class="btn btn-rose" [disabled]="procesando" (click)="eliminar('empleadasDomesticas', p)">
                     🗑 Eliminar
                   </button>
                 </div>
               </td>
-              <td class="td-muted">{{ formatearFecha(p.FechaEnvio) }}</td>
+              <td>{{ formatearFecha(p.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>
@@ -441,27 +441,27 @@
           <tbody>
             <tr *ngFor="let s of getRegistrosFiltrados('solicitudesEmpleadaDomestica'); trackBy: trackByRegistro">
               <td><strong>{{ s.Nombre }}</strong></td>
-              <td class="td-muted">{{ s.Email }}</td>
+              <td>{{ s.Email }}</td>
               <td>{{ s.Telefono }}</td>
               <td>{{ s.Zona }}</td>
               <td>{{ s.Domicilio }}</td>
-              <td class="text-truncate">{{ s.DescripcionTareas }}</td>
+              <td>{{ s.DescripcionTareas }}</td>
               <td>
                 <div class="estado-cell">
-                  <span class="estado-badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
+                  <span class="badge" [ngClass]="getEstadoClase(s.estado)">{{ getEstadoLabel(s.estado) }}</span>
                   <select
-                    [class]="'estado-select ' + getEstadoClase(s.estado)"
+                    class="form-control"
                     [value]="s.estado"
                     [disabled]="procesando"
                     (change)="cambiarEstado('solicitudesEmpleadaDomestica', s, $event)">
                     <option *ngFor="let option of estadoOptions" [value]="option.value">{{ option.label }}</option>
                   </select>
-                  <button class="btn-delete" [disabled]="procesando" (click)="eliminar('solicitudesEmpleadaDomestica', s)">
+                  <button class="btn btn-rose" [disabled]="procesando" (click)="eliminar('solicitudesEmpleadaDomestica', s)">
                     🗑 Eliminar
                   </button>
                 </div>
               </td>
-              <td class="td-muted">{{ formatearFecha(s.FechaEnvio) }}</td>
+              <td>{{ formatearFecha(s.FechaEnvio) }}</td>
             </tr>
           </tbody>
         </table>

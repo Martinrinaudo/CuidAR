@@ -1,8 +1,8 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { FormulariosService } from '../../../core/services/formularios.service';
+import { FormulariosService, SolicitudEmpleadaDomesticaFormData } from '../../../core/services/formularios.service';
 
 @Component({
   selector: 'app-solicitud-empleada-domestica',
@@ -13,52 +13,58 @@ import { FormulariosService } from '../../../core/services/formularios.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SolicitudEmpleadaDomesticaComponent {
-  private fb = inject(FormBuilder);
-  private formulariosService = inject(FormulariosService);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly formulariosService = inject(FormulariosService);
+  private readonly router = inject(Router);
 
-  solicitudForm: FormGroup;
-  mensaje: string = '';
-  error: string = '';
-  enviando: boolean = false;
+  readonly solicitudForm = this.fb.nonNullable.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    zona: ['', [Validators.required]],
+    domicilio: ['', [Validators.required, Validators.minLength(5)]],
+    descripcionTareas: ['', [Validators.required, Validators.minLength(10)]]
+  });
 
-  constructor() {
-    this.solicitudForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      zona: ['', [Validators.required]],
-      domicilio: ['', [Validators.required, Validators.minLength(5)]],
-      descripcionTareas: ['', [Validators.required, Validators.minLength(10)]]
-    });
-  }
+  mensaje = '';
+  error = '';
+  enviando = false;
+
+  private readonly formDefaults: SolicitudEmpleadaDomesticaFormData = {
+    nombre: '',
+    email: '',
+    telefono: '',
+    zona: '',
+    domicilio: '',
+    descripcionTareas: ''
+  };
 
   async onSubmit(): Promise<void> {
-    if (this.solicitudForm.valid && !this.enviando) {
-      this.enviando = true;
-      this.error = '';
-      this.mensaje = '';
-
-      try {
-        await this.formulariosService.crearSolicitudEmpleadaDomestica(this.solicitudForm.value);
-        this.mensaje = '¡Solicitud enviada! Te vamos a contactar con candidatas disponibles.';
-        this.solicitudForm.reset();
-        this.enviando = false;
-
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 3000);
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Ocurrio un error al enviar la solicitud. Intenta nuevamente.';
-        this.enviando = false;
-        console.error('Error:', err);
-      }
-    } else {
+    if (!this.solicitudForm.valid || this.enviando) {
       this.error = 'Por favor completa todos los campos correctamente.';
+      return;
+    }
+
+    this.enviando = true;
+    this.error = '';
+    this.mensaje = '';
+
+    try {
+      await this.formulariosService.crearSolicitudEmpleadaDomestica(this.solicitudForm.getRawValue());
+      this.mensaje = '¡Solicitud enviada! Te vamos a contactar con candidatas disponibles.';
+      this.solicitudForm.reset(this.formDefaults);
+      setTimeout(() => {
+        void this.router.navigate(['/']);
+      }, 3000);
+    } catch (err) {
+      this.error = err instanceof Error ? err.message : 'Ocurrió un error al enviar la solicitud. Intenta nuevamente.';
+      console.error('Error:', err);
+    } finally {
+      this.enviando = false;
     }
   }
 
   volver(): void {
-    this.router.navigate(['/']);
+    void this.router.navigate(['/']);
   }
 }
