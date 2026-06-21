@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { from, switchMap } from 'rxjs';
+import { catchError, from, switchMap } from 'rxjs';
 import { SupabaseService } from '../services/supabase.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -9,7 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.includes('/functions/v1/admin')) {
     return next(req);
   }
-  
+
   return from(supabaseService.safeGetSession()).pipe(
     switchMap(({ data: { session } }) => {
       if (session) {
@@ -20,6 +20,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         });
         return next(authReq);
       }
+
+      return next(req);
+    }),
+    catchError((error) => {
+      console.error('Error al resolver la sesion para la petición protegida:', error);
       return next(req);
     })
   );

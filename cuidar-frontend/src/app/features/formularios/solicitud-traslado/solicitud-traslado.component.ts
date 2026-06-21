@@ -1,8 +1,8 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { FormulariosService } from '../../../core/services/formularios.service';
+import { FormulariosService, SolicitudTrasladoFormData } from '../../../core/services/formularios.service';
 
 @Component({
   selector: 'app-solicitud-traslado',
@@ -13,59 +13,60 @@ import { FormulariosService } from '../../../core/services/formularios.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SolicitudTrasladoComponent {
-  private fb = inject(FormBuilder);
-  private formulariosService = inject(FormulariosService);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly formulariosService = inject(FormulariosService);
+  private readonly router = inject(Router);
 
-  solicitudForm: FormGroup;
-  mensaje: string = '';
-  error: string = '';
-  enviando: boolean = false;
+  readonly solicitudForm = this.fb.nonNullable.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    nombreFamiliar: ['', [Validators.required, Validators.minLength(3)]],
+    origen: ['', [Validators.required]],
+    destino: ['', [Validators.required]],
+    fechaHora: ['', [Validators.required]]
+  });
 
-  constructor() {
-    this.solicitudForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      nombreFamiliar: ['', [Validators.required, Validators.minLength(3)]],
-      origen: ['', [Validators.required]],
-      destino: ['', [Validators.required]],
-      fechaHora: ['', [Validators.required]]
-    });
-  }
+  mensaje = '';
+  error = '';
+  enviando = false;
+
+  private readonly formDefaults: SolicitudTrasladoFormData = {
+    nombre: '',
+    email: '',
+    telefono: '',
+    nombreFamiliar: '',
+    origen: '',
+    destino: '',
+    fechaHora: ''
+  };
 
   async onSubmit(): Promise<void> {
-    if (this.solicitudForm.valid && !this.enviando) {
-      this.enviando = true;
-      this.error = '';
-      this.mensaje = '';
-
-      // Convertir la fecha a formato UTC agregando Z al final
-      const formData = { ...this.solicitudForm.value };
-      if (formData.fechaHora && !formData.fechaHora.endsWith('Z')) {
-        formData.fechaHora = formData.fechaHora + ':00Z';
-      }
-
-      try {
-        await this.formulariosService.crearSolicitudTraslado(formData);
-        this.mensaje = '¡Solicitud enviada exitosamente! Pronto te contactaremos para coordinar el traslado.';
-        this.solicitudForm.reset();
-        this.enviando = false;
-        
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 3000);
-      } catch (err) {
-        this.error = 'Ocurrió un error al enviar la solicitud. Por favor intenta de nuevo.';
-        this.enviando = false;
-        console.error('Error:', err);
-      }
-    } else {
+    if (!this.solicitudForm.valid || this.enviando) {
       this.error = 'Por favor completa todos los campos correctamente.';
+      return;
+    }
+
+    this.enviando = true;
+    this.error = '';
+    this.mensaje = '';
+
+    try {
+      await this.formulariosService.crearSolicitudTraslado(this.solicitudForm.getRawValue());
+      this.mensaje = '¡Solicitud enviada exitosamente! Pronto te contactaremos para coordinar el traslado.';
+      this.solicitudForm.reset(this.formDefaults);
+      setTimeout(() => {
+        void this.router.navigate(['/']);
+      }, 3000);
+    } catch (err) {
+      this.error = err instanceof Error ? err.message : 'Ocurrió un error al enviar la solicitud. Por favor intenta de nuevo.';
+      console.error('Error:', err);
+    } finally {
+      this.enviando = false;
     }
   }
 
   volver(): void {
-    this.router.navigate(['/']);
+    void this.router.navigate(['/']);
   }
 }

@@ -1,7 +1,6 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,15 +10,4 @@ import { AdminService } from '../../../core/services/admin.service';
   styleUrl: './navbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarComponent implements OnInit {
-  private adminService = inject(AdminService);
-  isAdminLoggedIn: boolean = false;
-
-  async ngOnInit() {
-    this.isAdminLoggedIn = await this.adminService.isLoggedIn();
-  }
-
-  logout(): void {
-    this.adminService.logout().catch(err => console.error('Error al cerrar sesión:', err));
-  }
-}
+export class NavbarComponent {}

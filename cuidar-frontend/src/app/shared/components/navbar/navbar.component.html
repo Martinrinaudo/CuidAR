@@ -1,23 +1,16 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <div class="navbar-brand">
-      <a routerLink="/" class="brand-logo">
-        <img src="assets/logo.png" alt="CuidAR" class="logo">
-      </a>
-    </div>
+    <a routerLink="/" class="brand-link" aria-label="Ir al inicio">
+      <img src="assets/logo.png" alt="CuidAR" class="brand-logo" width="42" height="42">
+      <span class="brand-copy">
+        <strong>CuidAR</strong>
+        <small>Red de cuidado y apoyo</small>
+      </span>
+    </a>
 
     <div class="navbar-menu">
-      <ng-container *ngIf="!isAdminLoggedIn">
-        <!-- Usuario público -->
-        <a routerLink="/" class="nav-link">Inicio</a>
-      </ng-container>
-
-      <ng-container *ngIf="isAdminLoggedIn">
-        <!-- Admin logueado -->
-        <a routerLink="/admin/panel" class="nav-link">Panel Admin</a>
-        <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
-      </ng-container>
+      <a routerLink="/" class="nav-link">Inicio</a>
+      <a routerLink="/admin/login" class="nav-link nav-link-cta">Admin</a>
     </div>
   </div>
 </nav>
-

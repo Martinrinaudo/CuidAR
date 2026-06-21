@@ -19,7 +19,7 @@ export class AdminLoginComponent implements OnInit {
   mensajeExito: string = '';
   enviando: boolean = false;
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     // Detect OAuth callback (hash in URL)
     const hash = window.location.hash;
     if (hash && hash.includes('access_token')) {
@@ -34,15 +34,19 @@ export class AdminLoginComponent implements OnInit {
         return;
       } catch (err) {
         console.error('Error en callback OAuth:', err);
-        this.error = 'Error al procesar la autenticación';
+        this.error = this.supabaseService.formatError(err, 'Error al procesar la autenticación');
         return;
       }
     }
 
     // If already logged in, redirect
-    const { data: { session } } = await this.supabaseService.safeGetSession();
-    if (session) {
-      this.router.navigate(['/admin/panel']);
+    try {
+      const { data: { session } } = await this.supabaseService.safeGetSession();
+      if (session) {
+        this.router.navigate(['/admin/panel']);
+      }
+    } catch (err) {
+      this.error = this.supabaseService.formatError(err, 'No se pudo validar la sesión.');
     }
   }
 
@@ -59,12 +63,12 @@ export class AdminLoginComponent implements OnInit {
         }
       });
       if (error) {
-        this.error = 'Error al iniciar sesión con Google: ' + error.message;
+        this.error = this.supabaseService.formatError(error, 'Error al iniciar sesión con Google.');
         this.enviando = false;
       }
       // On success, Supabase redirects the browser — no further action needed
     } catch (err) {
-      this.error = 'Error al iniciar sesión';
+      this.error = this.supabaseService.formatError(err, 'Error al iniciar sesión.');
       this.enviando = false;
       console.error('Error:', err);
     }
