@@ -178,6 +178,10 @@ minimum_password_length = 6
 password_requirements = ""
 
 [auth.rate_limit]
+# Login de admin (OAuth Google vía supabase.auth.signInWithOAuth) usa Supabase Auth
+# nativo, no una Edge Function custom. El rate limiting de intentos de sign-in ya
+# viene built-in y se gestiona acá (config local) y en producción desde el dashboard:
+# Authentication > Rate Limits.
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
 email_sent = 2
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.

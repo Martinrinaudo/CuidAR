@@ -6,3 +6,10 @@ cuidar-frontend/node_modules/
 cuidar-frontend/.angular/
 **/appsettings.json
 CleanTables.csx
+
+build.log
+build_error.log
+audit.json
+npm_audit.txt
+*.tmp
+*.Backup.tmp

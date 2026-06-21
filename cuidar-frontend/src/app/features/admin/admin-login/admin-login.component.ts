@@ -50,6 +50,10 @@ export class AdminLoginComponent implements OnInit {
     }
   }
 
+  // Rate limiting de sign-in: lo maneja Supabase Auth nativamente (no hay
+  // Edge Function de login custom acá). Config: supabase/config.toml
+  // [auth.rate_limit] sign_in_sign_ups, y en producción desde el dashboard
+  // de Supabase en Authentication > Rate Limits.
   async loginConGoogle(): Promise<void> {
     if (this.enviando) return;
     this.enviando = true;
